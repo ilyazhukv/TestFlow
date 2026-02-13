@@ -5,6 +5,6 @@ import requireRoles from "../middleware/role.middleware.js";
 
 const router = express.Router();
 
-router.put("/users/:id/role", authMiddleware, requireRoles(["admin"]), updateUserRole);
+router.put("/users/role", authMiddleware, requireRoles(["admin"]), updateUserRole);
 
 export default router;
