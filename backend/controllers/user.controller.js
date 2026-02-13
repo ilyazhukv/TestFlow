@@ -7,7 +7,10 @@ export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
 
     const user = await User.findOne({ $or: [{ name }, { email }] });
-    if (user) return res.status(400).json({ message: "Name or email already exists" });
+    if (user) {
+      if (user.name === name) return res.status(400).json({ message: "Name already exists" });
+      if (user.email === email) return res.status(400).json({ message: "Email already exists" });
+    }
 
     const salt = await bcrypt.genSalt(Number(process.env.SALT_WORK_FACTOR));
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -23,9 +26,9 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { login, password } = req.body;
 
-    const user = await User.findOne({ $or: [{ name }, { email }] });
+    const user = await User.findOne({ $or: [{ name: login }, { email: login }] });
     if (!user) return res.status(404).json({ message: "Name or email not found" });
 
     const validPassword = await bcrypt.compare(password, user.passwordHash)
