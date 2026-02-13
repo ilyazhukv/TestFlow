@@ -2,9 +2,9 @@ import Test from "../models/Test.js";
 
 export const createTest = async (req, res) => {
   try {
-    const { title, description, questions } = req.body;
+    const { title, description, questions, createdBy } = req.body;
 
-    const newTest = new Test({ title, description, questions });
+    const newTest = new Test({ title, description, questions, createdBy });
     await newTest.save();
 
     res.status(201).json(newTest);
@@ -43,7 +43,7 @@ export const submitTest = async (req, res) => {
 
 export const getTests = async (req, res) => {
   try {
-    const tests = await Test.find().sort({ createdAt: -1 });
+    const tests = await Test.find().sort({ createdAt: -1 }).populate("createdBy", "name");
     res.json(tests);
   } catch (error) {
     res.status(500).json({ message: error.message });
