@@ -21,7 +21,7 @@ app.use("/result", resultRoutes)
 app.use("/test", testRoutes);
 app.use("/user", userRoutes);
 
-const PORT = process.env.PORT || 5555;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server started on http://localhost:${PORT}/`);

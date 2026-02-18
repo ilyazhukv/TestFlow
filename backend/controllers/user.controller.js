@@ -45,7 +45,7 @@ export const loginUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-passwordHash");
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -55,6 +55,13 @@ export const getUsers = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const { userId } = req.body;
+    const requsterId = req.user.id;
+    const requsterRole = req.user.role;
+
+    const isOwner = String(requsterId) === String(userId);
+    const isAdmin = String(requsterRole) === "admin"
+
+    if (!isOwner && !isAdmin) return res.status(403).json({ message: "Only admins can delete users" });
 
     const deleteUser = await User.findByIdAndDelete(userId);
     if (!deleteUser) return res.status(404).json({ message: "User not found" });

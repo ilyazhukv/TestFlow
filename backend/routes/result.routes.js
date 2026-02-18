@@ -6,7 +6,7 @@ import requireRoles from "../middleware/role.middleware.js";
 const router = express.Router();
 
 router.post("/save", authMiddleware, saveResult);
-router.get("/my-result", authMiddleware, getResult);
+router.get("/user/:id", authMiddleware, getResult);
 router.get("/", getResults);
 router.delete("/delete", authMiddleware, deleteResult)
 

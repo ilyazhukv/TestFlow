@@ -4,7 +4,7 @@ export const createTest = async (req, res) => {
   try {
     const { title, description, questions, createdBy } = req.body;
 
-    const newTest = new Test({ title, description, questions, createdBy });
+    const newTest = new Test({ title, description, questions, createdBy: req.user.id });
     await newTest.save();
 
     res.status(201).json(newTest);
@@ -46,11 +46,15 @@ export const deleteTest = async (req, res) => {
   try {
     const { testId } = req.body;
 
-    const deleteTest = await Test.findByIdAndDelete(testId);
-    if (!deleteTest) return res.status(404).json({ message: "Test not found" });
+    const test = await Test.findById(testId);
+    if (!test) return res.status(404).json({ message: "Test not found" });
 
-    res.status(200).json({ message: "The test has been deleted successfully" })
+    if (String(test.createdBy) !== String(req.user.id) && req.user.role !== 'admin')
+      return res.status(403).json({ message: "You don't have permission to delete this test" });
+
+    await Test.findByIdAndDelete(testId);
+    res.status(200).json({ message: "The test has been deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};

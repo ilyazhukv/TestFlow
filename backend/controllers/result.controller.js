@@ -3,7 +3,8 @@ import Test from "../models/Test.js";
 
 export const saveResult = async (req, res) => {
   try {
-    const { testId, userId, answers } = req.body;
+    const { testId, answers } = req.body;
+    const userId = req.user.id;
     const test = await Test.findById(testId).lean();
     if (!test) return res.status(404).json({ message: "Test not found" });
 
@@ -13,16 +14,18 @@ export const saveResult = async (req, res) => {
 
     test.questions.forEach(question => {
       maxScore += question.points;
-
       const userAnswer = answers.find(a => String(a.questionId) === String(question._id));
-      if (!userAnswer) return;
 
-      const correctOptionIds = question.options.filter(opt => opt.isCorrect).map(opt => String(opt._id));
+      let userSelectedIds = [];
+      let isCorrect = false;
 
-      const userSelectedIds = userAnswer?.selectedOptionIds.map(id => String(id));
+      if (userAnswer && Array.isArray(userAnswer.selectedOptionIds)) {
+        userSelectedIds = userAnswer.selectedOptionIds.map(id => String(id));
+        const correctOptionIds = question.options.filter(opt => opt.isCorrect).map(opt => String(opt._id));
 
-      const isCorrect = correctOptionIds.length === userSelectedIds.length &&
-        correctOptionIds.every(id => userSelectedIds.includes(id));
+        isCorrect = correctOptionIds.length === userSelectedIds.length &&
+          correctOptionIds.every(id => userSelectedIds.includes(id));
+      }
 
       if (isCorrect) score += question.points;
 
@@ -39,7 +42,7 @@ export const saveResult = async (req, res) => {
       answers: processedAnswers,
       score: score,
       maxScore: maxScore,
-      percentage: Math.round((score / maxScore) * 100)
+      percentage: maxScore > 0 ? Math.round((score / maxScore) * 100) : 0
     });
 
     await result.save();
@@ -51,16 +54,17 @@ export const saveResult = async (req, res) => {
 
 export const getResult = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const result = await Result.findById(userId);
+    const result = await Result.findById(req.params.id);
+    if (!result) return res.status(404).json({ message: "Result not found" })
+    res.status(200).json(result);
   } catch (error) {
-
+    res.status(500).json({ message: error.message });
   }
 }
 
 export const getResults = async (req, res) => {
   try {
-    const results = await Result.find().sort({ completedAt: -1 });
+    const results = await Result.find().sort({ completedAt: -1 }).select("-answers").populate("testId", "title");
     res.json(results);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -70,11 +74,19 @@ export const getResults = async (req, res) => {
 export const deleteResult = async (req, res) => {
   try {
     const { resultId } = req.body;
+    const result = await Result.findById(resultId);
 
-    const deleteResult = await Result.findByIdAndDelete(resultId);
-    if (!deleteResult) res.status(200).json({ message: "Result not found" });
+    if (!result) return res.status(404).json({ message: "Result not found" });
 
-    res.status(200).json({ message: "The result has been deleted successfully" })
+    const isOwner = String(result.userId) === String(req.user.id);
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({ message: "No permission" });
+    }
+
+    await Result.findByIdAndDelete(resultId);
+    res.status(200).json({ message: "Deleted" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
