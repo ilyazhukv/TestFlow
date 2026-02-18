@@ -2,7 +2,7 @@ import Test from "../models/Test.js";
 
 export const createTest = async (req, res) => {
   try {
-    const { title, description, questions, createdBy } = req.body;
+    const { title, description, questions } = req.body;
 
     const newTest = new Test({ title, description, questions, createdBy: req.user.id });
     await newTest.save();
