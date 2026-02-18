@@ -16,7 +16,7 @@ const MainLayout = () => {
             <Button color="inherit" onClick={logout}>Log Out</Button>
             </>
           ) : (
-            <Button component={Link} to={"/"} color="inherit">Log In</Button>
+            <Button component={Link} to={"/login"} color="inherit">Log In</Button>
           )}
         </Toolbar>
       </AppBar>
