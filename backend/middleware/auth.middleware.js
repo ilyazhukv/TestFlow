@@ -8,12 +8,13 @@ const authMiddleware = (req, res, next) => {
   if (!authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Token format is Bearer <token>" })
   }
+
   const token = authHeader.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = {
-      id: decoded.id,
+      id: decoded.userId,
       name: decoded.name,
       role: decoded.role
     };
