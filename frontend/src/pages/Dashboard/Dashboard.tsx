@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Card, CardActionArea, CardContent, Container, Typography } from "@mui/material";
+
 import type { Test } from "../../types/test";
 
 import api from "../../api/api";
@@ -25,15 +27,22 @@ const Dashboard = () => {
   if (loading) return <h1>Loading</h1>;
 
   return (
-    <>
-      <h1>Dashboard</h1>
+    <Container sx={{display: "flex", justifyContent: "space-around"}}>
       {tests.map((test) => (
-        <div key={test._id}>
-          <h3>{test.title}</h3>
-          <p>Create By {test.createdBy.name}</p>
-        </div>
+        <Card sx={{ maxWidth: 345 }}>
+          <CardActionArea>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {test.title}
+              </Typography>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {test.description}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
       ))}
-    </>
+    </Container>
   );
 };
 
