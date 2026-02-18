@@ -19,7 +19,8 @@ export const registerUser = async (req, res) => {
     const newUser = new User({ name, email, passwordHash: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ message: "Account created" });
+    const token = jwt.sign({ userId: newUser._id, name: newUser.name, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: "12h" });
+    res.json({ token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -53,10 +54,9 @@ export const getUsers = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    const userId = req.body;
+    const { userId } = req.body;
 
     const deleteUser = await User.findByIdAndDelete(userId);
-
     if (!deleteUser) return res.status(404).json({ message: "User not found" });
 
     await Test.deleteMany({ createdBy: userId });
