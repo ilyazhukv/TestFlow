@@ -13,34 +13,6 @@ export const createTest = async (req, res) => {
   }
 };
 
-export const submitTest = async (req, res) => {
-  try {
-    const test = await Test.findById(req.params.id);
-    if (!test) return res.status(404).json({ message: "Test not found" });
-    
-    const answers = req.body;
-    let score = 0;
-    let maxScore = 0;
-
-    test.questions.forEach(question => {
-      maxScore += question.points;
-
-      const userAnswer = answers.find(answer => answer.questionId === question._id.toString());
-      if (!userAnswer) return;
-
-      const selectedOption = question.options.find(option => option._id.toString() === userAnswer.selectedOptionId);
-      if (selectedOption && selectedOption.isCorrect) {
-        score += question.points;
-      }
-    });
-
-    const percentage = Math.round((score / maxScore) * 100);
-    res.status(200).json({ score, maxScore, percentage });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 export const getTests = async (req, res) => {
   try {
     const tests = await Test.find().sort({ createdAt: -1 }).populate("createdBy", "name");
@@ -49,3 +21,14 @@ export const getTests = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const deleteTest = async (req, res) => {
+  try {
+    const testId = req.body;
+
+    const deleteTest = await Test.findByIdAndDelete(testId);
+    if (!deleteTest) return res.status(404).json({ message: "Test not found" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

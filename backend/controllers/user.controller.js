@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import Test from "../models/Test.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -45,6 +46,22 @@ export const getUsers = async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export const deleteUser = async (req, res) => {
+  try {
+    const userId = req.body;
+
+    const deleteUser = await User.findByIdAndDelete(userId);
+
+    if (!deleteUser) return res.status(404).json({ message: "User not found" });
+
+    await Test.deleteMany({ createdBy: userId });
+
+    res.status(200).json({ message: "The user has been deleted successfully" })
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
