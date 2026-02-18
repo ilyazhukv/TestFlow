@@ -7,20 +7,20 @@ const MainLayout = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>Test Flow</Typography>
+      <AppBar position="static" sx={{height: "65px", display: "flex", justifyContent: "space-between"}}>
+        <Toolbar sx={{mx: "1%", justifyContent: "space-around"}}>
+          <Typography variant="h6">TestFlow</Typography>
           {isAuth ? (
             <>
             <Typography variant="h6">Hi {user?.name}</Typography>
             <Button color="inherit" onClick={logout}>Log Out</Button>
             </>
           ) : (
-            <Link to={"/"} color="inherit">Log In</Link>
+            <Button component={Link} to={"/"} color="inherit">Log In</Button>
           )}
         </Toolbar>
       </AppBar>
-      <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
+      <Container sx={{ flex: 1, p: 4 }}>
         <Outlet/>
       </Container>
     </Box>
