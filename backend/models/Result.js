@@ -5,12 +5,12 @@ const resultSchema = new mongoose.Schema({
   testId: { type: mongoose.Schema.Types.ObjectId, ref: "Test", required: true },
   answers: [{
     questionId: { type: mongoose.Schema.Types.ObjectId, required: true }, 
-    selectedOptionIndexes: [Number],
+    selectedOptionIndexes: [],
     isCorrect: { type: Boolean }
   }],
   score: { type: Number, default: 0 },
   maxScore: { type: Number, default: 0 },
-  percent: { type: Number },
+  percentage: { type: Number },
   completedAt: { type: Date, default: Date.now }
 });
 

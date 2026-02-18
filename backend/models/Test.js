@@ -10,8 +10,8 @@ const questionsSchema = new mongoose.Schema({
 });
 
 const testSchema = new mongoose.Schema({
-  title: { type: String, required: true, maxlength: 256 },
-  description: { type: String, maxlength: 1024 },
+  title: { type: String, required: true, maxlength: 128 },
+  description: { type: String, maxlength: 256 },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   questions: [questionsSchema],
   createdAt: { type: Date, default: Date.now }
