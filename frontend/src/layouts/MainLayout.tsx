@@ -4,6 +4,7 @@ import { Link, Outlet } from "react-router-dom";
 
 const MainLayout = () => {
   const { user, isAuth, logout } = useAuth();
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <AppBar position="static">
