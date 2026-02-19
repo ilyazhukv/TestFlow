@@ -62,7 +62,7 @@ export const deleteUser = async (req, res) => {
     const isOwner = String(requsterId) === String(userId);
     const isAdmin = String(requsterRole) === "admin"
 
-    if (!isOwner && !isAdmin) return res.status(403).json({ message: "Only admins can delete users" });
+    if (!isOwner && !isAdmin) return res.status(403).json({ message: "Only admins or Owner can delete account" });
 
     const deleteUser = await User.findByIdAndDelete(userId);
     if (!deleteUser) return res.status(404).json({ message: "User not found" });
