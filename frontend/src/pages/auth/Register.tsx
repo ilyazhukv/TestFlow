@@ -36,7 +36,7 @@ const Register = () => {
 
     try {
       await api.post("/user/register", formData);
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error:", error);
