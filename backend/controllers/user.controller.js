@@ -9,6 +9,7 @@ export const registerUser = async (req, res) => {
 
     const user = await User.findOne({ $or: [{ name }, { email }] });
     if (user) {
+      if (user.name === name && user.email === email) return res.status(400).json({ message: "Name and Email already exists" });
       if (user.name === name) return res.status(400).json({ message: "Name already exists" });
       if (user.email === email) return res.status(400).json({ message: "Email already exists" });
     }
@@ -30,7 +31,7 @@ export const loginUser = async (req, res) => {
   try {
     const { login, password } = req.body;
 
-    const user = await User.findOne({ $or: [{ name: login }, { email: login }] });
+    const user = await User.findOne({ $or: [{ name: login }, { email: login }] }).select("+passwordHash");
     if (!user) return res.status(404).json({ message: "Login not found" });
 
     const validPassword = await bcrypt.compare(password, user.passwordHash)
@@ -45,7 +46,7 @@ export const loginUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-passwordHash");
+    const users = await User.find();
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
