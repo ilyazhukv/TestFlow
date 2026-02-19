@@ -1,0 +1,68 @@
+openapi: 3.0.0
+info:
+  title: TestFlow API
+  version: 1.0.0
+
+paths:
+  /user/register:
+    post:
+      summary: User registration
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  example: "test"
+                email:
+                  type: string
+                  format: email
+                  example: "test@mail.ru"
+                password:
+                  type: string
+                  format: password
+                  example: "test"
+      responses:
+        200:
+          description: token
+        400:
+          description: Name already exists or Email already exists
+        500:
+          description: Error message
+
+  /user/login:
+    post:
+      summary: User authorization
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+              properties:
+                login:
+                  type: string
+                  example: "test"
+                password:
+                  type: string
+                  example: "test"
+      responses:
+        200:
+          description: token
+        404:
+          description: Login not found
+        500:
+          description: Error message
