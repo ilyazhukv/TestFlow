@@ -3,7 +3,140 @@ info:
   title: TestFlow API
   version: 1.0.0
 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
 paths:
+  # --- ADMIN ---
+  /admin/users/role:
+    put:
+      security:
+        - bearerAuth: []
+      summary: Change user role (For Admin)
+      tags:
+        - Admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - _id
+                - role
+              properties:
+                _id:
+                  type: string
+                  example: 65sawd5546awd5wa6...
+                role:
+                  type: string
+                  enum: [user, admin]
+      responses:
+        200:
+          description: Role has been updated successfully
+        400:
+          description: Invalid role
+        404:
+          description: User not found
+        500:
+          description: Error message
+
+  # --- TEST ---
+  /test/create:
+    post:
+      security:
+        - bearerAuth: []
+      summary: Create test (For registered)
+      tags: 
+        - Test
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - questions
+              properties:
+                title:
+                  type: string
+                  example: Test name
+                description:
+                  type: string
+                  example: Test description
+                questions:
+                  type: array
+                  items:
+                    properties:
+                      text:
+                        type: string
+                        example: Question
+                      options:
+                        type: array
+                        items:
+                          properties:
+                            text:
+                              type: string
+                              example: Answer
+                            isCorrect:
+                              type: boolean
+                              example: true
+                      points:
+                        type: number
+                        example: 5
+      responses:
+        201:
+          description: The test has been created successfully
+        401:
+          description: Invalid or expired token
+        500:
+          description: Error message
+
+  
+  /test/:
+    get:
+      summary: Get All Tests
+      tags:
+        - Test
+      responses:
+        200:
+          description: All Tests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    _id:
+                      type: string
+                      example: 65sawd5546awd5wa6...
+                    title:
+                      type: string
+                      example: Test name
+                    description:
+                      type: string
+                      example: Test description
+                    createdBy:
+                        properties:
+                          _id:
+                            type: string
+                            example: 65sawd5546awd5wa6...
+                          name:
+                            type: string
+                            example: Creator's name
+                    createdAt:
+                      type: string
+                      example: 2026-02-19T03:52:17.788Z
+        500:
+          description: Error message
+
+  # --- USER ---
   /user/register:
     post:
       summary: User registration
@@ -22,18 +155,26 @@ paths:
               properties:
                 name:
                   type: string
-                  example: "test"
+                  example: test
                 email:
                   type: string
                   format: email
-                  example: "test@mail.ru"
+                  example: test@mail.ru
                 password:
                   type: string
                   format: password
-                  example: "test"
+                  example: test
       responses:
         200:
           description: token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 65sawd5546awd5wa6...
         400:
           description: Name already exists or Email already exists
         500:
@@ -55,14 +196,89 @@ paths:
               properties:
                 login:
                   type: string
-                  example: "test"
+                  example: test
                 password:
                   type: string
-                  example: "test"
+                  format: password
+                  example: test
       responses:
         200:
           description: token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 65sawd5546awd5wa6...
         404:
           description: Login not found
+        500:
+          description: Error message
+
+  /user:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Get Users (For Admin)
+      tags:
+        - User
+      responses:
+        200:
+          description: Users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    _id:
+                      type: string
+                      example: 65sawd5546awd5wa6...
+                    name:
+                      type: string
+                      example: test
+                    email:
+                      type: string
+                      format: email
+                      example: test@gmail.come
+                    role:
+                      type: string
+                      enum: [user, admin]
+                    createdAt:
+                      type: string
+                      example: 2026-02-19T03:52:17.788Z
+        403:
+          description: Forbidden
+        500:
+          description: Error message
+
+  /user/delete:
+    delete:
+      security:
+        - bearerAuth: []
+      summary: Delete User (For Admin or Owner)
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userID
+              properties:
+                userId:
+                  type: string
+                  example: 65sawd5546awd5wa6...
+      responses:
+        200:
+          description: The user has been deleted successfully
+        403:
+          description: Only admins can delete users
+        404:
+          description: User not found
         500:
           description: Error message
