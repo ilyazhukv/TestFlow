@@ -1,3 +1,5 @@
+import fs from "fs/promises";
+
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -62,12 +64,16 @@ export const deleteUser = async (req, res) => {
     const isOwner = String(requsterId) === String(userId);
     const isAdmin = String(requsterRole) === "admin"
 
-    if (!isOwner && !isAdmin) return res.status(403).json({ message: "Only admins or Owner can delete account" });
+    if (!isOwner && !isAdmin) return res.status(403).json({ message: "Only Admins or Owner can delete account" });
 
-    const deleteUser = await User.findByIdAndDelete(userId);
-    if (!deleteUser) return res.status(404).json({ message: "User not found" });
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     await Test.deleteMany({ createdBy: userId });
+
+    if (user.image) {
+      fs.unlink(user.image);
+    }
 
     res.status(200).json({ message: "The user has been deleted successfully" })
   } catch (error) {
