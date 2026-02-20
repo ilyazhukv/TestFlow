@@ -159,13 +159,13 @@ paths:
                 email:
                   type: string
                   format: email
-                  example: test@mail.ru
+                  example: test@gmail.com
                 password:
                   type: string
                   format: password
                   example: test
       responses:
-        200:
+        201:
           description: token
           content:
             application/json:

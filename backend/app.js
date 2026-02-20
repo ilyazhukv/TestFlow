@@ -27,6 +27,7 @@ app.use("/result", resultRoutes)
 app.use("/test", testRoutes);
 app.use("/user", userRoutes);
 
+app.use('/uploads', express.static('uploads'));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = process.env.PORT || 5000;
