@@ -7,7 +7,7 @@ export const createTest = async (req, res) => {
     const newTest = new Test({ title, description, questions, createdBy: req.user.id });
     await newTest.save();
 
-    res.status(201).json({message: "The test has been created successfully"});
+    res.status(201).json({ message: "The test has been created successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
