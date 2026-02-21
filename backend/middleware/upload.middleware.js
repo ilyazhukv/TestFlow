@@ -10,7 +10,7 @@ const storageConfig = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startWith("image/")) {
+  if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
     cb(new Error("Invalid file format! Only images are allowed"), false);
@@ -18,5 +18,4 @@ const fileFilter = (req, file, cb) => {
 }
 
 export const uploadUserAvatar = multer({ storage: storageConfig, fileFilter: fileFilter, limits: { fieldSize: 1024 * 1024 } }).single("image");
-export const uploadTestImage = multer({ storage: storageConfig, fileFilter: fileFilter }).single("testImage");
-export const uploadQuestionImage = multer({ storage: storageConfig, fileFilter: fileFilter, limits: {fieldSize: 512 * 1024}}).single("questionImage")
+export const uploadTestImage = multer({ storage: storageConfig, fileFilter: fileFilter }).any();

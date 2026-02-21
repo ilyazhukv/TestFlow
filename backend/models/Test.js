@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const questionsSchema = new mongoose.Schema({
   questionImage: {type: String, default: "/uploads/default-bg.webp", trim: true},
-  text: { type: String, required: true },
+  text: { type: String, required: true, maxlength: 128 },
   options: [{
-    text: { type: String, required: true },
+    text: { type: String, required: true, maxlength: 128 },
     isCorrect: { type: Boolean, default: false }
   }],
   points: { type: Number, default: 1 }

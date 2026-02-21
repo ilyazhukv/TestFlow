@@ -2,9 +2,16 @@ import Test from "../models/Test.js";
 
 export const createTest = async (req, res) => {
   try {
-    const { title, description, questions } = req.body;
+    const questions = JSON.parse(req.body.questions);
+    const mainImage = req.files.find(f => f.fieldname === "testImage");
+    const testImage = mainImage ? `/uploads/${mainImage.filename}` : "/uploads/default-bg.webp";
 
-    const newTest = new Test({ title, description, questions, createdBy: req.user.id });
+    questions.forEach((question, i) => {
+      const questionFile = req.files.find(f => f.fieldname === `questionImage_${i}`);
+      if (questionFile) question.questionImage = `/uploads/${questionFile.filename}`;
+    });
+
+    const newTest = new Test({ testImage, title: req.body.title, description: req.body.description, questions, createdBy: req.user.id });
     await newTest.save();
 
     res.status(201).json({ message: "The test has been created successfully" });

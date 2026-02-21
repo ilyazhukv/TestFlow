@@ -6,7 +6,7 @@ import validator from "../middleware/validator.middleware.js";
 
 const router = express.Router();
 
-router.post("/register", validator({email: true, password: 4}), registerUser);
+router.post("/register", validator({email: true, password: 8}), registerUser);
 router.post("/login", loginUser);
 router.get("/", authMiddleware, requireRoles(["admin"]), getUsers);
 router.delete("/delete", authMiddleware, deleteUser);

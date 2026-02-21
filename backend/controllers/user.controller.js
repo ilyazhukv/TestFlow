@@ -22,7 +22,7 @@ export const registerUser = async (req, res) => {
     const newUser = new User({ name, email, passwordHash: hashedPassword });
     await newUser.save();
 
-    const token = jwt.sign({ userId: newUser._id, name: newUser.name, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: "12h" });
+    const token = jwt.sign({ id: newUser._id, name: newUser.name, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: "12h" });
     res.json({ token });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -39,7 +39,7 @@ export const loginUser = async (req, res) => {
     const validPassword = await bcrypt.compare(password, user.passwordHash)
     if (!validPassword) return res.status(401).json({ message: "Incorrect password" });
 
-    const token = jwt.sign({ userId: user._id, name: user.name, role: user.role }, process.env.JWT_SECRET, { expiresIn: "12h" });
+    const token = jwt.sign({ id: user._id, name: user.name, role: user.role }, process.env.JWT_SECRET, { expiresIn: "12h" });
     res.json({ token });
   } catch (error) {
     res.status(500).json({ message: error.message });
