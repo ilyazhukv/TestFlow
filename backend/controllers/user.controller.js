@@ -33,7 +33,7 @@ export const loginUser = async (req, res) => {
   try {
     const { login, password } = req.body;
 
-    const user = await User.findOne({ $or: [{ name: login }, { email: login }] }).select("+passwordHash");
+    const user = await User.findOne({ $or: [{ name: login }, { email: login }] }).collation({ locale: 'en', strength: 2 }).select("+passwordHash");
     if (!user) return res.status(404).json({ message: "Login not found" });
 
     const validPassword = await bcrypt.compare(password, user.passwordHash)
