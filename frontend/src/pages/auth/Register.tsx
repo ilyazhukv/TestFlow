@@ -7,7 +7,8 @@ import {
   Alert,
 } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 import api from "../../api/api";
 import axios from "axios";
@@ -19,6 +20,7 @@ const Register = () => {
     password: "",
   });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,27 +37,37 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await api.post("/user/register", formData);
+      const resp = await api.post("/user/register", formData);
+      const { token } = resp.data;
+      login(token);
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error:", error);
-        const message = error.response?.data?.messege || "Something went wrong";
+        const message = error.response?.data?.message || "Something went wrong";
         setErrorMsg(message);
       }
     }
   };
 
   return (
-    <Container sx={{minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+    <Container
+      maxWidth="sm"
+      sx={{
+        minHeight: "70vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
       {errorMsg && (
-        <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
+        <Alert severity="error" sx={{ width: "45%", mb: 2 }}>
           {errorMsg}
         </Alert>
       )}
       <Box
         sx={{
-          mt: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -64,7 +76,9 @@ const Register = () => {
         <Typography variant="h5" component="h1">
           Sign-Up
         </Typography>
-        <Typography component="p">Welcome</Typography>
+        <Typography component="p">
+          Enter your email, name and password
+        </Typography>
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
             name="email"
@@ -102,6 +116,12 @@ const Register = () => {
           >
             Sign Up
           </Button>
+          <Typography component="p">
+            Have an account?{" "}
+            <Box component="span">
+              <Link to="/login">Login</Link>
+            </Box>
+          </Typography>
         </Box>
       </Box>
     </Container>

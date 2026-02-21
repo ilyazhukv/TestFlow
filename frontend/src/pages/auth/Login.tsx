@@ -7,7 +7,7 @@ import {
   Alert,
 } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 import api from "../../api/api";
@@ -48,7 +48,7 @@ const Login = () => {
   };
 
   return (
-    <Container sx={{minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+    <Container maxWidth="sm" sx={{minHeight: "70vh", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
       {errorMsg && (
         <Alert severity="error" sx={{ width: "45%", mb: 2 }}>
           {errorMsg}
@@ -64,7 +64,7 @@ const Login = () => {
         <Typography variant="h5" component="h1">
           Sign-In
         </Typography>
-        <Typography component="p">Welcome</Typography>
+        <Typography component="p">Enter your login and password</Typography>
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
             name="login"
@@ -93,6 +93,7 @@ const Login = () => {
           >
             Sign In
           </Button>
+          <Typography component="p">Don't have an account? <Box component="span"><Link to="/register">Register</Link></Box></Typography>
         </Box>
       </Box>
     </Container>
