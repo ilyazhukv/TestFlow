@@ -5,16 +5,18 @@ export interface Option {
 
 export interface Question {
   _id?: string;
+  questionImage: string;
   text: string;
-  options: [Option];
+  options: Option[];
   points: number;
 }
 
 export interface Test {
   _id: string;
+  testImage: string;
   title: string;
   description: string;
   createdBy: { _id: string; name: string };
-  questions: [Question];
+  questions: Question[];
   createdAt: string;
 }
