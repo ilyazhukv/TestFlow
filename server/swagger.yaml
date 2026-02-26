@@ -87,3 +87,86 @@ components:
         email: { type: string, example: "john@example.com" }
         role: { type: string, enum: ["user", "admin"] }
         status: { type: string, enum: ["stopped", "active"] }
+
+    UserShort:
+      type: object
+      properties:
+        id: { type: string, example: "65d1f..." }
+        name: { type: string, example: "John Doe" }
+
+    AuthResponse:
+      type: object
+      properties:
+        access: { type: string, description: "JWT Access Token" }
+        user:
+          $ref: "#/components/schemas/UserShort"
+
+paths:
+  /auth/register:
+    post:
+      tags: [Authorization]
+      summary: Register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name: { type: string, example: "John Doe" }
+                email: { type: string, example: "john@example.com" }
+                password: { type: string, example: "examplePassword" }
+      responses:
+        200:
+          description: Return JWT Access Token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        500: { description: Internal server error }
+
+  /auth/login:
+    post:
+      tags: [Authorization]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [login, password]
+              properties:
+                login: { type: string, example: "John Doe Or john@example.com" }
+                password: { type: string, example: "examplePassword" }
+      responses:
+        200:
+          description: Return JWT Access Token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        500: { description: Internal server error }
+
+  /auth/logout:
+    post:
+      tags: [Authorization]
+      summary: Logout
+      responses:
+        200: { description: Logged out successfully }
+        500: { description: Logout failed }
+
+  /auth/refresh:
+    post:
+      tags: [Authorization]
+      summary: Refresh
+      responses:
+        200:
+          description: Tokens refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        401: { description: Invalid or expired refresh token }
+        404: { description: Refresh token not found in cookies }
