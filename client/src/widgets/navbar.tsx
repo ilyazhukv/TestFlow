@@ -13,19 +13,21 @@ import {
 } from "@heroui/navbar";
 import { link as linkStyles } from "@heroui/theme";
 import clsx from "clsx";
+import { NavLink, useLocation } from "react-router-dom";
 
-import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
+import { siteConfig } from "@/app/config/site.config";
+import { ThemeSwitch } from "@/features/theme-switch/ui/theme-switch";
 import {
   TwitterIcon,
   GithubIcon,
   DiscordIcon,
   HeartFilledIcon,
   SearchIcon,
-} from "@/components/icons";
-import { Logo } from "@/components/icons";
+} from "@/shared/ui/icons";
+import { Logo } from "@/shared/ui/icons";
 
 export const Navbar = () => {
+  const { pathname } = useLocation();
   const searchInput = (
     <Input
       aria-label="Search"
@@ -52,9 +54,10 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <Link
+            as={NavLink}
             className="flex justify-start items-center gap-1"
             color="foreground"
-            href="/"
+            to={"/"}
           >
             <Logo />
             <p className="font-bold text-inherit">ACME</p>
@@ -62,14 +65,15 @@ export const Navbar = () => {
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
+            <NavbarItem key={item.href} isActive={pathname === item.href}>
               <Link
+                as={NavLink}
                 className={clsx(
                   linkStyles({ color: "foreground" }),
                   "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 color="foreground"
-                href={item.href}
+                to={item.href}
               >
                 {item.label}
               </Link>
