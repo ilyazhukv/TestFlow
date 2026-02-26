@@ -102,6 +102,47 @@ components:
           $ref: "#/components/schemas/UserShort"
 
 paths:
+  /category:
+    post:
+      tags: [Category]
+      summary: Create category
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title: { type: string, example: "exampleCategory" }
+      responses:
+        201:
+          description: Category created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  newCtegory:
+                    $ref: "#/components/schemas/Category"
+        401: { description: Unauthorized }
+        403: { description: Forbidden (Admin only) }
+        500: { description: Internal server error }
+
+  /category/:
+    get:
+      tags: [Category]
+      summary: Get all categories
+      responses:
+        200:
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
   /auth/register:
     post:
       tags: [Authorization]
