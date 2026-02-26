@@ -2,3 +2,88 @@ openapi: 3.0.0
 info:
   title: TestFlow
   version: 1.0.0
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Category:
+      type: object
+      properties:
+        _id: { type: string, example: "65d1f..." }
+        title: { type: string, example: "Category" }
+
+    Question:
+      type: object
+      required:
+        - text
+        - type
+        - options
+      properties:
+        _id: { type: string, example: "65d1f..." }
+        testId: { type: string, example: "65d1f..." }
+        text: { type: string, example: "Question" }
+        type:
+          type: string,
+          enum: ["one_answer", "several_answers", "text_reply"]
+        options:
+          type: array
+          items:
+            type: object
+            required:
+              - text
+            properties:
+              _id: { type: string }
+              text: { type: string }
+              isCorrect:
+                { type: boolean, description: "Hidden for non-authors/admins" }
+        order: { type: number, example: 0 }
+
+    Result:
+      type: object
+      properties:
+        _id: { type: string, example: "65d1f..." }
+        userId: { type: string, example: "65d1f..." }
+        testId: { type: string, example: "65d1f..." }
+        score: { type: number, example: 0 }
+        maxScore: { type: number, example: 0 }
+        percent: { type: number, example: 0 }
+        answers:
+          type: array
+          items:
+            properties:
+              userAnswer: { type: string, example: "65d1f..." }
+              correctAnswer: { type: string, example: "65d1f..." }
+        completedAt: { type: date, example }
+
+    Test:
+      type: object
+      required:
+        - title
+      properties:
+        _id: { type: string }
+        image: { type: string, example: "/uploads/example.png" }
+        title: { type: string, maxLength: 128 }
+        description: { type: string, maxLength: 256 }
+        category: { type: string, example: "example type" }
+        author: { type: string, description: "UserID" }
+        isPublic: { type: boolean, default: false }
+        createdAt: { type: string, format: date-time }
+
+    User:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        _id: { type: string, example: "65d1f..." }
+        avatar: { type: string, example: "/uploads/image" }
+        name: { type: string, example: "John Doe" }
+        email: { type: string, example: "john@example.com" }
+        role: { type: string, enum: ["user", "admin"] }
+        status: { type: string, enum: ["stopped", "active"] }
