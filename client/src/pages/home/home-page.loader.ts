@@ -1,4 +1,4 @@
-export async function homePageLoader() {
+export default async function homePageLoader() {
   const data = { title: "Home" };
 
   return data;

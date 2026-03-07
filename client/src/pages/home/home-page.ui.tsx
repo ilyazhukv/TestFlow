@@ -6,8 +6,9 @@ import { button as buttonStyles } from "@heroui/theme";
 import { siteConfig } from "@/app/config/site.config";
 import { title, subtitle } from "@/shared/ui/primitives";
 import { GithubIcon } from "@/shared/ui/icons";
+import LogoutButton from "@/features/session/logout/logout.ui";
 
-export function HomePage() {
+export default function HomePage() {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block max-w-lg text-center justify-center">
@@ -45,11 +46,7 @@ export function HomePage() {
       </div>
 
       <div className="mt-8">
-        <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">pages/index.tsx</Code>
-          </span>
-        </Snippet>
+        <LogoutButton />
       </div>
     </section>
   );
