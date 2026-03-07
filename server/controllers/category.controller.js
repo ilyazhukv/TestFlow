@@ -12,7 +12,7 @@ export const createCategory = async (req, res) => {
 
     res.status(201).json({ newCategory });
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 };
 
@@ -21,6 +21,6 @@ export const readCategory = async (req, res) => {
     const category = await Category.find();
     res.json(category);
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 }

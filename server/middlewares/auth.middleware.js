@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 const authMiddleware = (req, res, next) => {
   const authHeader = req.header("Authorization");
 
-  if (!authHeader) return res.status(401).json({ message: "No token" });
+  if (!authHeader) return res.status(401).json({ error: { token: ["No token"] } });
   if (!authHeader.startsWith("Bearer ")) return res.status(401).json({ message: "Token format is Bearer <token>" });
 
   const token = authHeader.split(" ")[1];
@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
     req.user = { id: decoded.id, role: decoded.role };
     next();
   } catch (error) {
-    res.status(401).json({ message: "Invalid or expired token" });
+    res.status(401).json({ error: { server: ["Invalid or expired token"] } });
   }
 };
 
