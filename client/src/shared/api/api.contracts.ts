@@ -6,7 +6,6 @@ export const UserDtoSchema = z.object({
     avatar: z.string().nullable(),
     name: z.string(),
     email: z.string().email(),
-    token: z.string(),
     role: z.string(),
     status: z.string(),
     createdAt: z.string(),
@@ -25,6 +24,22 @@ export const RegisterUserDtoSchema = z.object({
     name: z.string(),
     email: z.string().email(),
     password: z.string().min(8),
+  }),
+});
+
+export const TestDtoSchema = z.object({
+  test: z.object({
+    id: z.string(),
+    image: z.string().nullable(),
+    title: z.string(),
+    description: z.string(),
+    category: z.optional(z.string().array()),
+    author: z.object({
+      avatar: z.string().nullable(),
+      name: z.string(),
+    }),
+    isPublic: z.boolean(),
+    createdAt: z.string(),
   }),
 });
 

@@ -9,11 +9,11 @@ import { useEffect, useState } from "react";
 
 import { DefaultLayout } from "./layouts/default";
 
+import { homePageRoute } from "@/pages/home/home-page.route";
 import { loginPageRoute } from "@/pages/login/login-page.route";
 import { registerPageRoute } from "@/pages/register/register-page.route";
 import { page404Route } from "@/pages/page-404/page-404.route";
 import { pathKeys } from "@/shared/router";
-import { homePageRoute } from "@/pages/home/home-page.route";
 import { persistor } from "@/shared/store";
 import { Spiner } from "@/shared/ui/spiner/spiner.ui";
 
@@ -70,7 +70,9 @@ function BubbleError(): null {
     if (error instanceof Error) {
       throw error;
     } else {
-      throw new Error(typeof error === "string" ? error : JSON.stringify(error));
+      throw new Error(
+        typeof error === "string" ? error : JSON.stringify(error),
+      );
     }
   }
   return null;

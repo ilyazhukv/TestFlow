@@ -4,6 +4,7 @@ import {
   UserDtoSchema,
   LoginUserDtoSchema,
   RegisterUserDtoSchema,
+  TestDtoSchema,
 } from "./api.contracts";
 import { api } from "./api.instance";
 import { responseContract } from "./api.lib";
@@ -29,4 +30,8 @@ export function logoutUser(config?: AxiosRequestConfig) {
 
 export function refreshToken(config?: AxiosRequestConfig) {
   return api.get("/auth/refresh", config).then(responseContract(UserDtoSchema));
+}
+
+export function getTests(config?: AxiosRequestConfig) {
+  return api.get("/test", config).then(responseContract(TestDtoSchema));
 }

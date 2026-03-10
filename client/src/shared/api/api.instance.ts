@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 
 import { ApiErrorDataDtoSchema } from "./api.contracts";
 import { normalizeValidationErrors } from "./api.lib";
+
 import { store } from "@/shared/store";
 
 type RefreshHandler = () => Promise<void>;
@@ -15,14 +16,9 @@ export function setRefreshHandler(handler: RefreshHandler) {
 
 export const api = axios.create({ baseURL: import.meta.env.VITE_API_URL, withCredentials: true });
 
-export function attachAuthInterceptor(getAuthToken: () => string | undefined) {
+export function attachAuthInterceptor() {
   api.interceptors.request.use(
     (config) => {
-      const token = getAuthToken();
-
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
 
       return config;
     },
@@ -48,10 +44,6 @@ api.interceptors.response.use(
 
       try {
         await refreshPromise;
-
-        const newToken = (store.getState() as any).session?.token;
-
-        if (newToken) originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
         return api.request(originalRequest);
       } catch (refreshError) {

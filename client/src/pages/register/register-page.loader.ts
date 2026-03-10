@@ -1,7 +1,6 @@
-export default async function registerPageLoader() {
-  const data = { title: "Register" };
+import { LoaderFunctionArgs, redirect } from "react-router-dom";
 
-  return data;
+export default async function registerPageLoader(args: LoaderFunctionArgs) {
+
+  return args;
 }
-
-export type RegisterPageData = Awaited<ReturnType<typeof registerPageLoader>>;

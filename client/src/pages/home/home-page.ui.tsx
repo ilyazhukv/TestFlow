@@ -1,6 +1,4 @@
 import { Link } from "@heroui/link";
-import { Snippet } from "@heroui/snippet";
-import { Code } from "@heroui/code";
 import { button as buttonStyles } from "@heroui/theme";
 
 import { siteConfig } from "@/app/config/site.config";

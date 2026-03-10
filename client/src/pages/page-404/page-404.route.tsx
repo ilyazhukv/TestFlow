@@ -1,4 +1,5 @@
 import { RouteObject } from "react-router-dom";
+
 import { pathKeys } from "@/shared/router";
 
 export const page404Route: RouteObject = {

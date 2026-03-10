@@ -9,7 +9,7 @@ import { attachAuthInterceptor, setRefreshHandler } from "@/shared/api/api.insta
 import { queryClient } from "@/shared/queryClient";
 import { store } from "@/shared/store";
 
-attachAuthInterceptor(() => store.getState().session?.token);
+attachAuthInterceptor();
 setRefreshHandler(refreshSession)
 
 export default function App() {
