@@ -26,9 +26,9 @@ export const register = async (req, res) => {
 
     const { access, refresh } = generateToken(newUser);
 
-    await Token.findOneAndUpdate({ userId: newUser._id }, { refreshToken: refresh }, { upsert: true });
+    await Token.findOneAndUpdate({ userId: newUser._id }, { refreshToken: refresh, accessToken: access }, { upsert: true });
 
-    setRefreshCookie(res, refresh);
+    setRefreshCookie(res, access, refresh);
     return res.status(200).json({
       user: {
         id: newUser._id,
@@ -38,7 +38,6 @@ export const register = async (req, res) => {
         status: newUser.status,
         createdAt: newUser.createdAt,
         avatar: newUser.avatar || null,
-        token: access
       }
     });
   } catch (error) {
@@ -58,9 +57,9 @@ export const login = async (req, res) => {
 
     const { access, refresh } = generateToken(user);
 
-    await Token.findOneAndUpdate({ userId: user._id }, { refreshToken: refresh }, { upsert: true });
+    await Token.findOneAndUpdate({ userId: user._id }, { refreshToken: refresh, accessToken: access }, { upsert: true });
 
-    setRefreshCookie(res, refresh);
+    setRefreshCookie(res, access, refresh);
     return res.status(200).json({
       user: {
         id: user._id,
@@ -70,7 +69,6 @@ export const login = async (req, res) => {
         status: user.status,
         createdAt: user.createdAt,
         avatar: user.avatar || null,
-        token: access
       }
     });
   } catch (error) {
@@ -84,6 +82,7 @@ export const logout = async (req, res) => {
     if (refreshToken) await Token.findOneAndDelete({ refreshToken });
 
     res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
+    res.clearCookie("accessToken", { httpOnly: true, sameSite: "strict" });
 
     return res.status(200).json({ message: { server: ["Logged out successfully"] } });
   } catch (error) {
@@ -106,10 +105,11 @@ export const refresh = async (req, res) => {
 
     const { access, refresh } = generateToken(user);
 
+    tokenData.accessToken = access;
     tokenData.refreshToken = refresh;
     await tokenData.save();
 
-    setRefreshCookie(res, refresh);
+    setRefreshCookie(res, access, refresh);
     return res.status(200).json({
       user: {
         id: user._id,
@@ -119,12 +119,12 @@ export const refresh = async (req, res) => {
         status: user.status,
         createdAt: user.createdAt,
         avatar: user.avatar || null,
-        token: access
       }
     });
   } catch (error) {
-    await Token.findOneAndDelete({ refreshToken });
-    res.clearCookie("refreshToken");
+    await Token.findOneAndDelete({ refreshToken: res.cookies.refreshToken });
+    res.clearCookie("refreshToken")
+    res.clearCookie("accessToken");
     return res.status(401).json({ errors: { login: ["Token expired or invalid"] } });
   }
 };

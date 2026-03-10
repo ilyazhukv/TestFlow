@@ -7,6 +7,7 @@ export const generateToken = (user) => {
   return { access, refresh };
 };
 
-export const setRefreshCookie = (res, refresh) => {
+export const setRefreshCookie = (res, access, refresh) => {
+  res.cookie("accessToken", access, {httpOnly: true, sameSite: "strict", maxAge: 15 * 60 * 1000})
   res.cookie("refreshToken", refresh, { httpOnly: true, sameSite: "strict", maxAge: 7 * 24 * 60 * 60 * 1000 });
 };
