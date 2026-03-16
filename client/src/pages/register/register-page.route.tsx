@@ -1,4 +1,5 @@
 import { RouteObject } from "react-router-dom";
+
 import { pathKeys } from "@/shared/router";
 
 export const registerPageRoute: RouteObject = {
@@ -8,6 +9,7 @@ export const registerPageRoute: RouteObject = {
       import("./register-page.loader").then((module) => module.default),
       import("./register-page.ui").then((module) => module.default),
     ]);
+
     return { loader, Component };
   },
 };

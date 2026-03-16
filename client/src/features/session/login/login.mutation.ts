@@ -1,7 +1,11 @@
 import type { User } from "@/entities/session/session.types";
 import type { LoginUser } from "./login.types";
 
-import { DefaultError, useMutation, UseMutationOptions } from "@tanstack/react-query";
+import {
+  DefaultError,
+  useMutation,
+  UseMutationOptions,
+} from "@tanstack/react-query";
 
 import { transformLoginUserToLoginUserDto } from "./login.lib";
 

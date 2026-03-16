@@ -8,7 +8,7 @@ import { rootReducer } from "@/shared/store";
 
 type State = User | null;
 
-const sessionSlice = createSlice({
+export const sessionSlice = createSlice({
   name: "session",
   initialState: null as State,
   reducers: {

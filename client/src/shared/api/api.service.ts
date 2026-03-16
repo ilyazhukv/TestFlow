@@ -5,6 +5,7 @@ import {
   LoginUserDtoSchema,
   RegisterUserDtoSchema,
   TestDtoSchema,
+  TestsDtoSchema,
 } from "./api.contracts";
 import { api } from "./api.instance";
 import { responseContract } from "./api.lib";
@@ -32,6 +33,10 @@ export function refreshToken(config?: AxiosRequestConfig) {
   return api.get("/auth/refresh", config).then(responseContract(UserDtoSchema));
 }
 
-export function getTests(config?: AxiosRequestConfig) {
-  return api.get("/test", config).then(responseContract(TestDtoSchema));
+export function getTestBySlug(slug: string, config?: AxiosRequestConfig) {
+  return api.get(`/test/${slug}`, config).then(responseContract(TestDtoSchema));
+}
+
+export function getAllTests(config?: AxiosRequestConfig) {
+  return api.get("/test", config).then(responseContract(TestsDtoSchema));
 }

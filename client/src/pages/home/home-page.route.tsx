@@ -1,4 +1,5 @@
 import { RouteObject } from "react-router-dom";
+
 import { pathKeys } from "@/shared/router";
 
 export const homePageRoute: RouteObject = {
@@ -8,6 +9,7 @@ export const homePageRoute: RouteObject = {
       import("./home-page.loader").then((module) => module.default),
       import("./home-page.ui").then((module) => module.default),
     ]);
+
     return { loader, Component };
   },
 };

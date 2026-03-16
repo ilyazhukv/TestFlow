@@ -4,6 +4,9 @@ import {
   UserDtoSchema,
   LoginUserDtoSchema,
   RegisterUserDtoSchema,
+  TestDtoSchema,
+  TestsDtoSchema,
+  FilterQueryDtoSchema,
   ApiErrorDataDtoSchema,
   ApiErrorDataSchema,
 } from "./api.contracts";
@@ -11,6 +14,10 @@ import {
 export type UserDto = z.infer<typeof UserDtoSchema>;
 export type LoginUserDto = z.infer<typeof LoginUserDtoSchema>;
 export type RegisterUserDto = z.infer<typeof RegisterUserDtoSchema>;
+
+export type TestDto = z.infer<typeof TestDtoSchema>;
+export type TestsDto = z.infer<typeof TestsDtoSchema>;
+export type FilterQueryDto = z.infer<typeof FilterQueryDtoSchema>
 
 export type ApiErrorDataDto = z.infer<typeof ApiErrorDataDtoSchema>;
 export type ApiErrorData = z.infer<typeof ApiErrorDataSchema>;

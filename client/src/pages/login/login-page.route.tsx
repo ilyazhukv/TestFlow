@@ -9,6 +9,7 @@ export const loginPageRoute: RouteObject = {
       import("./login-page.loader").then((module) => module.default),
       import("./login-page.ui").then((module) => module.default),
     ]);
+
     return { loader, Component };
   },
 };

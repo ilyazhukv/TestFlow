@@ -3,7 +3,7 @@ import Token from "../models/Token.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { generateToken, setRefreshCookie } from "../utils/token.js";
+import { generateToken, setRefreshCookie } from "../service/token.js";
 
 export const register = async (req, res) => {
   try {

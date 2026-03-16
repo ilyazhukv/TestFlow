@@ -28,19 +28,36 @@ export const RegisterUserDtoSchema = z.object({
 });
 
 export const TestDtoSchema = z.object({
-  test: z.object({
-    id: z.string(),
-    image: z.string().nullable(),
-    title: z.string(),
-    description: z.string(),
-    category: z.optional(z.string().array()),
-    author: z.object({
-      avatar: z.string().nullable(),
-      name: z.string(),
-    }),
-    isPublic: z.boolean(),
-    createdAt: z.string(),
+  _id: z.string(),
+  slug: z.string(),
+  image: z.string().nullable(),
+  title: z.string(),
+  description: z.string(),
+  category: z
+    .object({
+      _id: z.string(),
+      title: z.string(),
+    })
+    .nullable(),
+  author: z.object({
+    _id: z.string(),
+    name: z.string(),
+    avatar: z.string().nullable().optional(),
   }),
+  isPublic: z.boolean(),
+  createdAt: z.string(),
+});
+
+export const TestsDtoSchema = z.object({
+  tests: z.array(TestDtoSchema),
+  testsCount: z.number(),
+});
+
+export const FilterQueryDtoSchema = z.object({
+  offset: z.number().min(0),
+  limit: z.number().min(1),
+  tag: z.string().optional(),
+  author: z.string().optional(),
 });
 
 export const ApiErrorDataDtoSchema = z.object({

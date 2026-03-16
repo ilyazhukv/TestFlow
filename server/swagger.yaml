@@ -181,6 +181,7 @@ paths:
               properties:
                 login: { type: string, example: "John Doe Or john@example.com" }
                 password: { type: string, example: "examplePassword" }
+                # {"user":{"login":"John Doe","password":"examplePassword"}}
       responses:
         200:
           description: Return JWT Access Token

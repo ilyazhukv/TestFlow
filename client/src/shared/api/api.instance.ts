@@ -3,8 +3,6 @@ import axios, { AxiosError } from "axios";
 import { ApiErrorDataDtoSchema } from "./api.contracts";
 import { normalizeValidationErrors } from "./api.lib";
 
-import { store } from "@/shared/store";
-
 type RefreshHandler = () => Promise<void>;
 let refreshLogic: RefreshHandler | null = null;
 let isRefreshing = false;
@@ -39,7 +37,7 @@ api.interceptors.response.use(
         refreshPromise = refreshLogic().finally(() => {
           isRefreshing = false;
           refreshPromise = null;
-        })
+        });
       }
 
       try {
@@ -47,27 +45,10 @@ api.interceptors.response.use(
 
         return api.request(originalRequest);
       } catch (refreshError) {
-        return Promise.reject(refreshError); 
+        return Promise.reject(refreshError);
       }
     }
 
-    if (!axios.isAxiosError(error)) {
-      return Promise.reject(error);
-    }
-
-    const validation = ApiErrorDataDtoSchema.safeParse(error.response?.data);
-
-    if (!validation.success) {
-      return Promise.reject(error);
-    }
-
-    const normalizedErrorResponse = {
-      ...error.response!,
-      data: normalizeValidationErrors(validation.data),
-    };
-
-    return Promise.reject(
-      new AxiosError(error.message, error.code, error.config, error.request, normalizedErrorResponse),
-    );
-  },
+    return Promise.reject(error);
+  }
 );

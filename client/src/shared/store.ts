@@ -9,6 +9,7 @@ export const rootReducer = combineSlices().withLazyLoadedSlices<LazyLoadedSlices
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["session"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -15,7 +15,6 @@ export const getUser = async (req, res) => {
         status: user.status,
         createdAt: user.createdAt,
         avatar: user.avatar || null,
-        token: access
       }
     });
   } catch (error) {

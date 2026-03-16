@@ -1,4 +1,8 @@
-import { DefaultError, useMutation, UseMutationOptions } from "@tanstack/react-query";
+import {
+  DefaultError,
+  useMutation,
+  UseMutationOptions,
+} from "@tanstack/react-query";
 
 import { logoutUser } from "@/shared/api/api.service";
 import { queryClient } from "@/shared/queryClient";

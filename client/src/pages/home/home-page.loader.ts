@@ -1,7 +1,5 @@
-export default async function homePageLoader() {
-  const data = { title: "Home" };
+import { LoaderFunctionArgs } from "react-router-dom";
 
-  return data;
+export default async function homePageLoader(args: LoaderFunctionArgs) {
+  return args;
 }
-
-export type HomePageData = Awaited<ReturnType<typeof homePageLoader>>;

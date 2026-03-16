@@ -5,8 +5,9 @@ export const pathKeys = {
   register: "/register",
   page404: "/404",
 
-  tests: {
+  test: {
     root: "/test",
+    create: "/test/create",
     bySlug: (slug: string) => `/test/${slug}`,
   },
 };

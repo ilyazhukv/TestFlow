@@ -10,6 +10,7 @@ import swaggerUi from "swagger-ui-express";
 import dbConnect from "./config/db.js";
 import authRouter from "./routes/auth.routes.js"
 import categoryRouter from "./routes/category.routes.js"
+import testRouter from "./routes/test.routes.js"
 import userRouter from "./routes/user.routes.js"
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRouter);
 app.use("/category", categoryRouter);
+app.use("/test", testRouter);
 app.use("/user", userRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

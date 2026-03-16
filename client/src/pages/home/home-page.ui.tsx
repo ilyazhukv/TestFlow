@@ -4,7 +4,6 @@ import { button as buttonStyles } from "@heroui/theme";
 import { siteConfig } from "@/app/config/site.config";
 import { title, subtitle } from "@/shared/ui/primitives";
 import { GithubIcon } from "@/shared/ui/icons";
-import LogoutButton from "@/features/session/logout/logout.ui";
 
 export default function HomePage() {
   return (
@@ -41,10 +40,6 @@ export default function HomePage() {
           <GithubIcon size={20} />
           GitHub
         </Link>
-      </div>
-
-      <div className="mt-8">
-        <LogoutButton />
       </div>
     </section>
   );

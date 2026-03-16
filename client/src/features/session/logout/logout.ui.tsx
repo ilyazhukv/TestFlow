@@ -1,10 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@heroui/button";
 
 import { useLogoutMutation } from "./logout.mutation";
 
 import { pathKeys } from "@/shared/router";
-
 
 export default function LogoutButton() {
   const navigate = useNavigate();
@@ -21,10 +20,11 @@ export default function LogoutButton() {
 
   return (
     <Button
-      className="btn btn-outline-danger"
+      as={NavLink}
+      className="text-sm font-normal text-default-600 bg-default-100"
       type="button"
       onClick={handleClick}
-      data-test="logout-button"
+      variant="flat"
     >
       Logout
     </Button>

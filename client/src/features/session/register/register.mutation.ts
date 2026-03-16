@@ -1,7 +1,11 @@
 import type { User } from "@/entities/session/session.types";
 import type { RegisterUser } from "./register.types";
 
-import { DefaultError, useMutation, UseMutationOptions } from "@tanstack/react-query";
+import {
+  DefaultError,
+  useMutation,
+  UseMutationOptions,
+} from "@tanstack/react-query";
 
 import { transformRegisterUserToRegisterUserDto } from "./register.lib";
 
@@ -24,7 +28,8 @@ export function useRegisterMutation(
     mutationKey: ["session", "register-user", ...mutationKey],
 
     mutationFn: async (registerUserData: RegisterUser) => {
-      const registerUserDto = transformRegisterUserToRegisterUserDto(registerUserData);
+      const registerUserDto =
+        transformRegisterUserToRegisterUserDto(registerUserData);
       const { data } = await registerUser(registerUserDto);
       const user = transformUserDtoToUser(data);
       return user;
