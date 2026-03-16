@@ -16,7 +16,7 @@ import { NavLink, useLocation } from "react-router-dom";
 
 import { siteConfig } from "@/app/config/site.config";
 import { ThemeSwitch } from "@/features/theme-switch/ui/theme-switch";
-import { GithubIcon, SearchIcon, UserIcon } from "@/shared/ui/icons";
+import { GithubIcon, SearchIcon } from "@/shared/ui/icons";
 import { Logo } from "@/shared/ui/icons";
 import { store } from "@/shared/store";
 import LogoutButton from "@/features/session/logout/logout.ui";
