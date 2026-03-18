@@ -1,9 +1,4 @@
-import { Link } from "@heroui/link";
-import { button as buttonStyles } from "@heroui/theme";
-
-import { siteConfig } from "@/app/config/site.config";
 import { title, subtitle } from "@/shared/ui/primitives";
-import { GithubIcon } from "@/shared/ui/icons";
 
 export default function HomePage() {
   return (
@@ -18,28 +13,6 @@ export default function HomePage() {
         <div className={subtitle({ class: "mt-4" })}>
           Beautiful, fast and modern React UI library.
         </div>
-      </div>
-
-      <div className="flex gap-3">
-        <Link
-          isExternal
-          className={buttonStyles({
-            color: "primary",
-            radius: "full",
-            variant: "shadow",
-          })}
-          href={siteConfig.links.docs}
-        >
-          Documentation
-        </Link>
-        <Link
-          isExternal
-          className={buttonStyles({ variant: "bordered", radius: "full" })}
-          href={siteConfig.links.github}
-        >
-          <GithubIcon size={20} />
-          GitHub
-        </Link>
       </div>
     </section>
   );

@@ -13,15 +13,17 @@ import {
 import { link as linkStyles } from "@heroui/theme";
 import clsx from "clsx";
 import { NavLink, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 import { siteConfig } from "@/app/config/site.config";
 import { ThemeSwitch } from "@/features/theme-switch/ui/theme-switch";
-import { GithubIcon, SearchIcon } from "@/shared/ui/icons";
+import { SearchIcon } from "@/shared/ui/icons";
 import { Logo } from "@/shared/ui/icons";
 import { store } from "@/shared/store";
 import LogoutButton from "@/features/session/logout/logout.ui";
 
 export const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { pathname } = useLocation();
   const searchInput = (
     <Input
@@ -38,9 +40,31 @@ export const Navbar = () => {
       type="search"
     />
   );
+  const authButton = (
+    <>
+      {store.getState().session ? (
+        <LogoutButton onClick={() => setIsMenuOpen(false)} />
+      ) : (
+        <Button
+          as={NavLink}
+          className="text-sm font-normal text-default-600 bg-default-100 w-full"
+          to={"/login"}
+          variant="flat"
+          onClick={() => setIsMenuOpen(false)}
+        >
+          Sign In
+        </Button>
+      )}
+    </>
+  );
 
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky">
+    <HeroUINavbar
+      isMenuOpen={isMenuOpen}
+      maxWidth="xl"
+      position="sticky"
+      onMenuOpenChange={setIsMenuOpen}
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <Link
@@ -53,7 +77,7 @@ export const Navbar = () => {
             <p className="font-bold text-inherit">TESTFLOW</p>
           </Link>
         </NavbarBrand>
-        <div className="hidden lg:flex gap-4 justify-start ml-2">
+        <div className="hidden md:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href} isActive={pathname === item.href}>
               <Link
@@ -79,29 +103,11 @@ export const Navbar = () => {
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          {store.getState().session ? (
-            <>
-              <LogoutButton />
-            </>
-          ) : (
-            <Button
-              as={NavLink}
-              className="text-sm font-normal text-default-600 bg-default-100"
-              to={"/login"}
-              variant="flat"
-            >
-              Sign In
-            </Button>
-          )}
-        </NavbarItem>
+        <NavbarItem className="hidden md:flex">{searchInput}</NavbarItem>
+        <NavbarItem className="hidden md:flex">{authButton}</NavbarItem>
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
         <ThemeSwitch />
         <NavbarMenuToggle />
       </NavbarContent>
@@ -112,21 +118,19 @@ export const Navbar = () => {
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
+                as={NavLink}
+                color="foreground"
                 size="lg"
+                to={`${item.href}`}
+                onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}
               </Link>
             </NavbarMenuItem>
           ))}
         </div>
+
+        <div className="mx-4 mb-12 mt-auto">{authButton}</div>
       </NavbarMenu>
     </HeroUINavbar>
   );
