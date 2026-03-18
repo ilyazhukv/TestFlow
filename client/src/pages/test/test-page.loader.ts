@@ -4,9 +4,7 @@ import { queryClient } from "@/shared/queryClient";
 import { testsQueryOptions } from "@/entities/test/test.api";
 import { FilterQuerySchema } from "@/entities/test/test.contracts";
 
-export default async function testListPageLoader({
-  request,
-}: LoaderFunctionArgs) {
+export default async function testPageLoader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
 
   const filterQuery = FilterQuerySchema.parse({

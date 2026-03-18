@@ -10,7 +10,7 @@ const authMiddleware = (req, res, next) => {
     req.user = { id: decoded.id, role: decoded.role };
     next();
   } catch (error) {
-    res.status(401).json({ error: { server: ["Invalid or expired token"] } });
+    res.status(401).json({ errors: { server: ["Invalid or expired token"] } });
   }
 };
 

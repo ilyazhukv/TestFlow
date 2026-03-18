@@ -6,10 +6,11 @@ import {
   RegisterUserDtoSchema,
   TestDtoSchema,
   TestsDtoSchema,
+  CreateTestDtoSchema,
 } from "./api.contracts";
 import { api } from "./api.instance";
 import { responseContract } from "./api.lib";
-import { LoginUserDto, RegisterUserDto } from "./api.types";
+import { LoginUserDto, RegisterUserDto, CreateTestDto } from "./api.types";
 
 export function getUser(config?: AxiosRequestConfig) {
   return api.get('/user', config).then(responseContract(UserDtoSchema));
@@ -39,4 +40,9 @@ export function getTestBySlug(slug: string, config?: AxiosRequestConfig) {
 
 export function getAllTests(config?: AxiosRequestConfig) {
   return api.get("/test", config).then(responseContract(TestsDtoSchema));
+}
+
+export function createTest(createTestDto: CreateTestDto, config?: AxiosRequestConfig) {
+  const data = CreateTestDtoSchema.parse(createTestDto);
+  return api.post("/test/create", data, config).then(responseContract(TestDtoSchema));
 }

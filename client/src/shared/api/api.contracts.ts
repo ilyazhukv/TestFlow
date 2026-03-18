@@ -27,6 +27,16 @@ export const RegisterUserDtoSchema = z.object({
   }),
 });
 
+export const CreateTestDtoSchema = z.object({
+  test: z.object({
+    image: z.string().nullable(),
+    title: z.string(),
+    description: z.string(),
+    category: z.string().optional(),
+    isPublic: z.boolean(),
+  }),
+});
+
 export const TestDtoSchema = z.object({
   _id: z.string(),
   slug: z.string(),

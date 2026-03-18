@@ -10,7 +10,11 @@ export const siteConfig = {
     },
     {
       label: "Test",
-      href: "/test"
+      href: "/test",
+    },
+    {
+      label: "Editor",
+      href: "/editor",
     },
   ],
   navMenuItems: [
@@ -20,7 +24,11 @@ export const siteConfig = {
     },
     {
       label: "Test",
-      href: "/test"
+      href: "/test",
+    },
+    {
+      label: "Editor",
+      href: "/editor",
     },
   ],
 };

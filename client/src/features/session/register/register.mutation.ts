@@ -32,6 +32,7 @@ export function useRegisterMutation(
         transformRegisterUserToRegisterUserDto(registerUserData);
       const { data } = await registerUser(registerUserDto);
       const user = transformUserDtoToUser(data);
+
       return user;
     },
 

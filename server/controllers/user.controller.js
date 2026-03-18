@@ -4,7 +4,7 @@ export const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
 
-    if (!user) return res.status(404).json({ errors: { login: ["User not found"] } });
+    if (!user) return res.status(404).json({ error: { login: ["User not found"] } });
 
     res.json({
       user: {
@@ -18,6 +18,6 @@ export const getUser = async (req, res) => {
       }
     });
   } catch (error) {
-    return res.status(500).json({ errors: { server: ["Internal server error"] } });
+    return res.status(500).json({ error: { server: ["Internal server error"] } });
   }
 }

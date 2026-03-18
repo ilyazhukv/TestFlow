@@ -5,7 +5,7 @@ import { Pagination } from "@heroui/react";
 import { testsQueryOptions } from "@/entities/test/test.api";
 import { TestCard } from "@/entities/test/test-card.ui";
 
-export default function BaseTestListPage() {
+export default function BaseTestPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { context } = useLoaderData() as any;
   const { filterQuery } = context;

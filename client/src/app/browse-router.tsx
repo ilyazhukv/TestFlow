@@ -12,26 +12,29 @@ import { DefaultLayout } from "./layouts/default";
 import { homePageRoute } from "@/pages/home/home-page.route";
 import { loginPageRoute } from "@/pages/login/login-page.route";
 import { registerPageRoute } from "@/pages/register/register-page.route";
-import { testListPageRoute } from "@/pages/test-list/test-list-page.route";
+import { testPageRoute } from "@/pages/test/test-page.route";
+import { editorPageRoute } from "@/pages/editor/editor-page.route";
 import { page404Route } from "@/pages/page-404/page-404.route";
 import { pathKeys } from "@/shared/router";
 import { persistor, store } from "@/shared/store";
-import { Spiner } from "@/shared/ui/spiner/spiner.ui";
+import { CustomSpinner } from "@/shared/ui/spinner/spinner.ui";
 import { queryClient } from "@/shared/queryClient";
 import { sessionQueryOptions } from "@/entities/session/session.api";
+import { GuestRoute, PortectedRoute } from "@/entities/session/router-provider";
 
 async function rootLoader() {
   if (!store.getState().session) {
     try {
       await queryClient.fetchQuery({
         ...sessionQueryOptions,
-        meta: { skipAuthRefresh: true }
+        meta: { skipAuthRefresh: true },
       });
     } catch (e: any) {}
   }
 
   return null;
 }
+
 export function BootstrappedRouter() {
   const [router, setRouter] = useState<ReturnType<typeof browserRouter> | null>(
     null,
@@ -50,27 +53,27 @@ export function BootstrappedRouter() {
     }
   }, []);
 
-  if (!router) {
-    return <Spiner />;
-  }
+  if (!router) return <CustomSpinner />;
 
-  return <RouterProvider fallbackElement={<Spiner />} router={router} />;
+  return <RouterProvider fallbackElement={<CustomSpinner />} router={router} />;
 }
 
 const browserRouter = () =>
   createBrowserRouter([
     {
+      element: <DefaultLayout />,
+      loader: rootLoader,
       errorElement: <BubbleError />,
       children: [
+        homePageRoute,
+        testPageRoute,
         {
-          element: <DefaultLayout />,
-          loader: rootLoader,
-          children: [
-            homePageRoute,
-            loginPageRoute,
-            registerPageRoute,
-            testListPageRoute,
-          ],
+          element: <PortectedRoute />,
+          children: [editorPageRoute],
+        },
+        {
+          element: <GuestRoute />,
+          children: [loginPageRoute, registerPageRoute],
         },
         {
           element: <Outlet />,

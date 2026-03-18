@@ -4,16 +4,10 @@ import { pathKeys } from "@/shared/router";
 
 export default function Page404() {
   return (
-    <div className="container">
-      <h1 className="logo-font" data-test="not-found-title">
-        Page not found
-      </h1>
-      <p>Sorry, we couldn&apos;t find the page you&apos;re looking for.</p>
-      <Link
-        className="btn btn-sm btn-outline-primary"
-        data-test="go-home-link"
-        to={pathKeys.root}
-      >
+    <div className="flex items-center flex-col">
+      <h2 className="text-8xl">404</h2>
+      <h1 className="text-4xl">Page Not Foun</h1>
+      <Link className="text-2xl mt-[24px]" to={pathKeys.root}>
         Go back home
       </Link>
     </div>

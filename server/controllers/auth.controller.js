@@ -98,7 +98,7 @@ export const refresh = async (req, res) => {
     const tokenData = await Token.findOne({ refreshToken });
     if (!tokenData) return res.status(404).json({ message: { token: ["Token not in database"] } });
 
-    const userData = jwt.verify(refreshToken, process.env.JWT_REFRESH);
+    const userData = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
     const user = await User.findById(userData.id);
     if (!user) return res.status(404).json({ message: { login: ["User not found"] } });
@@ -122,7 +122,7 @@ export const refresh = async (req, res) => {
       }
     });
   } catch (error) {
-    await Token.findOneAndDelete({ refreshToken: res.cookies.refreshToken });
+    await Token.findOneAndDelete({ refreshToken: req.cookies.refreshToken });
     res.clearCookie("refreshToken")
     res.clearCookie("accessToken");
     return res.status(401).json({ errors: { login: ["Token expired or invalid"] } });

@@ -24,7 +24,10 @@ export function TestCard({ data }: { data: Test }) {
           alt={data.title}
           className="object-cover rounded-xl"
           height={180}
-          src={data.image || "https://heroui.com"}
+          src={
+            data.image ||
+            "https://img.freepik.com/premium-vector/no-photo-available-vector-icon-default-image-symbol-picture-coming-soon-web-site-mobile-app_87543-14040.jpg"
+          }
           width="100%"
         />
         <p className="text-default-500 text-small px-2 line-clamp-2">

@@ -10,4 +10,9 @@ export const pathKeys = {
     create: "/test/create",
     bySlug: (slug: string) => `/test/${slug}`,
   },
+
+  editor: {
+    root: "/editor/",
+    bySlug: (slug: string) => `/editor/${slug}/`,
+  },
 };
