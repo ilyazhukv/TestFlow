@@ -7,7 +7,6 @@ export const pathKeys = {
 
   test: {
     root: "/test",
-    create: "/test/create",
     bySlug: (slug: string) => `/test/${slug}`,
   },
 

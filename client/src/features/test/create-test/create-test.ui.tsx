@@ -30,7 +30,7 @@ export function BaseCreateTestForm() {
     mode: "onTouched",
     resolver: zodResolver(CreateTestSchema),
     defaultValues: {
-      image: "",
+      image: undefined,
       title: "",
       description: "",
       category: "",
@@ -63,14 +63,15 @@ export function BaseCreateTestForm() {
 
       <fieldset className="form-group">
         <input
+          accept="image/*"
           className="form-control form-control-lg"
           data-test="article-title-input"
           disabled={isPending}
-          placeholder="Test Image Link"
-          type="text"
+          placeholder="Test Image"
+          type="file"
           {...register("image")}
         />
-        <ErrorMessage as="div" errors={errors} name="title" role="alert" />
+        <ErrorMessage as="div" errors={errors} name="image" role="alert" />
       </fieldset>
 
       <fieldset className="form-group">
@@ -94,7 +95,7 @@ export function BaseCreateTestForm() {
           type="text"
           {...register("description")}
         />
-        <ErrorMessage as="div" errors={errors} name="title" role="alert" />
+        <ErrorMessage as="div" errors={errors} name="description" role="alert" />
       </fieldset>
 
       <fieldset className="form-group">
@@ -106,7 +107,7 @@ export function BaseCreateTestForm() {
           type="text"
           {...register("category")}
         />
-        <ErrorMessage as="div" errors={errors} name="title" role="alert" />
+        <ErrorMessage as="div" errors={errors} name="category" role="alert" />
       </fieldset>
 
       <fieldset className="form-group">
@@ -118,7 +119,7 @@ export function BaseCreateTestForm() {
           type="checkbox"
           {...register("isPublic")}
         />
-        <ErrorMessage as="div" errors={errors} name="title" role="alert" />
+        <ErrorMessage as="div" errors={errors} name="isPublic" role="alert" />
       </fieldset>
 
       <Button

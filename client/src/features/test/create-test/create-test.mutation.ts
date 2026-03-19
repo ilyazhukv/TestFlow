@@ -4,7 +4,7 @@ import {
   UseMutationOptions,
 } from "@tanstack/react-query";
 
-import { transformCreateTestToCreateTestDto } from "./create-test.lib";
+import { transformCreateTestToFormData } from "./create-test.lib";
 import { CreateTest } from "./create-test.types";
 
 import { createTest } from "@/shared/api/api.service";
@@ -25,11 +25,10 @@ export function useCreateTestMutation(
     mutationKey: ["test", "create", ...mutationKey],
 
     mutationFn: async (createTestData: CreateTest) => {
-      const createTestDto = transformCreateTestToCreateTestDto(createTestData);
-      const { data } = await createTest(createTestDto);
-      const test = transformTestDtoToTest(data);
+      const formData = transformCreateTestToFormData(createTestData);
+      const { data } = await createTest(formData); 
 
-      return test;
+      return transformTestDtoToTest(data);
     },
 
     onMutate,

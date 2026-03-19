@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CreateTestSchema = z.object({
-  image: z.string().optional(),
+  image: z.any().optional(),
   title: z
     .string()
     .min(1, { message: "Minimum characters 1" })
