@@ -7,6 +7,7 @@ import {
   TestDtoSchema,
   TestsDtoSchema,
   CreateTestDtoSchema,
+  CategoriesDtoSchema,
 } from "./api.contracts";
 import { api } from "./api.instance";
 import { responseContract } from "./api.lib";
@@ -45,4 +46,8 @@ export function getAllTests(config?: AxiosRequestConfig) {
 export function createTest(createTestDto: FormData | CreateTestDto, config?: AxiosRequestConfig) {
   const data = createTestDto instanceof FormData ? createTestDto : CreateTestDtoSchema.parse(createTestDto);
   return api.post("/test/create", data, config).then(responseContract(TestDtoSchema));
+}
+
+export function getCategories(config?: AxiosRequestConfig) {
+  return api.get("/category", config).then(responseContract(CategoriesDtoSchema))
 }

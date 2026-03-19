@@ -4,11 +4,13 @@ import { Button } from "@heroui/button";
 import { ErrorBoundary } from "react-error-boundary";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 import { CreateTest } from "./create-test.types";
 import { CreateTestSchema } from "./create-test.contracts";
 import { useCreateTestMutation } from "./create-test.mutation";
 
+import { categoriesQueryOptions } from "@/entities/category/category.api";
 import { pathKeys } from "@/shared/router";
 
 export function CreateTestForm() {
@@ -21,6 +23,7 @@ export function CreateTestForm() {
 
 export function BaseCreateTestForm() {
   const navigate = useNavigate();
+  const { data: categories, isLoading: isCatsLoading } = useQuery(categoriesQueryOptions());
 
   const {
     register,
@@ -64,8 +67,6 @@ export function BaseCreateTestForm() {
       <fieldset className="form-group">
         <input
           accept="image/*"
-          className="form-control form-control-lg"
-          data-test="article-title-input"
           disabled={isPending}
           placeholder="Test Image"
           type="file"
@@ -76,8 +77,6 @@ export function BaseCreateTestForm() {
 
       <fieldset className="form-group">
         <input
-          className="form-control form-control-lg"
-          data-test="article-title-input"
           disabled={isPending}
           placeholder="Test Title"
           type="text"
@@ -88,32 +87,33 @@ export function BaseCreateTestForm() {
 
       <fieldset className="form-group">
         <input
-          className="form-control form-control-lg"
-          data-test="article-title-input"
           disabled={isPending}
           placeholder="Test Description"
           type="text"
           {...register("description")}
         />
-        <ErrorMessage as="div" errors={errors} name="description" role="alert" />
+        <ErrorMessage
+          as="div"
+          errors={errors}
+          name="description"
+          role="alert"
+        />
       </fieldset>
 
       <fieldset className="form-group">
-        <input
-          className="form-control form-control-lg"
-          data-test="article-title-input"
-          disabled={isPending}
-          placeholder="Test Category"
-          type="text"
-          {...register("category")}
-        />
+        <select disabled={isPending || isCatsLoading} {...register("category")}>
+          <option value="">Select Category</option>
+          {categories?.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.title}
+            </option>
+          ))}
+        </select>
         <ErrorMessage as="div" errors={errors} name="category" role="alert" />
       </fieldset>
 
       <fieldset className="form-group">
         <input
-          className="form-control form-control-lg"
-          data-test="article-title-input"
           disabled={isPending}
           placeholder="Test Public"
           type="checkbox"

@@ -68,6 +68,13 @@ export const FilterQueryDtoSchema = z.object({
   author: z.string().optional(),
 });
 
+export const CategoryDtoSchema = z.object({
+  _id: z.string(),
+  title: z.string(),
+});
+
+export const CategoriesDtoSchema = z.array(CategoryDtoSchema);
+
 export const ApiErrorDataDtoSchema = z.object({
   errors: z.record(z.string(), z.array(z.string())),
 });
