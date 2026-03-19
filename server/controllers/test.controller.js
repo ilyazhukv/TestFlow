@@ -23,13 +23,15 @@ export const getTests = async (req, res) => {
 
 export const createTest = async (req, res) => {
   try {
-    const { image, title, description, category } = req.body.test;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    const { title, description, category, isPublic } = req.body;
 
     const newTest = new Test({
-      image,
+      image: imagePath,
       title,
       description,
       category,
+      isPublic: isPublic,
       author: req.user.id
     });
 

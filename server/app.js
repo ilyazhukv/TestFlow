@@ -22,7 +22,7 @@ const swaggerDocument = yaml.parse(swaggerFile);
 const app = e();
 
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
-app.use(e.json());
+app.use(e.json({limit: "10mb"}));
 app.use(cookieParser());
 
 app.use("/auth", authRouter);
@@ -30,6 +30,7 @@ app.use("/category", categoryRouter);
 app.use("/test", testRouter);
 app.use("/user", userRouter);
 
+app.use("/uploads", e.static("uploads"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = process.env.PORT
