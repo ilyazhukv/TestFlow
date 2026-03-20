@@ -2,7 +2,6 @@ import { useLoaderData, useSearchParams } from "react-router-dom";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Pagination } from "@heroui/react";
 
-import { PrimaryFilter } from "@/features/test/filter-test/filter-test.ui";
 import { testsQueryOptions } from "@/entities/test/test.api";
 import { TestCard } from "@/entities/test/test-card.ui";
 
@@ -22,9 +21,6 @@ export function ListTests() {
 
   return (
     <div className="container mx-auto py-10 px-6">
-      <div className="gap-6">
-        <PrimaryFilter />
-      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-7">
         {data.tests.map((test: any) => (
           <TestCard key={test.id} data={test} />
