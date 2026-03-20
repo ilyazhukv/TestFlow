@@ -19,11 +19,12 @@ export const editorPageRoute: RouteObject = {
     {
       path: ":slug",
       lazy: async () => {
-        const [loader] = await Promise.all([
+        const [loader, Component] = await Promise.all([
           import("./editor-page.loader").then((m) => m.editorUpdatePageLoader),
+          import("./editor-page.ui").then((m) => m.UpdateEditorPage)
         ]);
 
-        return { loader };
+        return { loader, Component };
       },
     },
   ],

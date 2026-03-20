@@ -1,43 +1,39 @@
-import { useSearchParams, useLoaderData } from "react-router-dom";
+import { ReactNode } from "react";
+import { useLoaderData } from "react-router-dom";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Pagination } from "@heroui/react";
 
-import { testsQueryOptions } from "@/entities/test/test.api";
-import { TestCard } from "@/entities/test/test-card.ui";
+import { EditorLoaderArgs } from "./test-page.loader";
 
-export default function BaseTestPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { context } = useLoaderData() as any;
-  const { filterQuery } = context;
+import { ListTests } from "@/features/test/list-test/list-test.ui";
+import { testQueryOptions } from "@/entities/test/test.api";
 
-  const { data } = useSuspenseQuery(testsQueryOptions(filterQuery));
+export function ListTestPage() {
+  return(
+    <TestPageWrapperr>
+      <ListTests />
+    </TestPageWrapperr>
+  )
+}
 
-  const handlePageChange = (page: number) => {
-    const newParams = new URLSearchParams(searchParams);
+export default function TestPage() {
+  const { params } = useLoaderData() as EditorLoaderArgs;
+  const { slug } = params;
 
-    newParams.set("page", String(page));
-    setSearchParams(newParams);
-  };
+  const { data: test } = useSuspenseQuery(testQueryOptions(slug));
+
+  return <div>{test.slug}</div>;
+}
+
+function TestPageWrapperr(props: { children: ReactNode }) {
+  const { children } = props;
 
   return (
-    <div className="container mx-auto py-10 px-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {data.tests.map((test: any) => (
-          <TestCard key={test.id} data={test} />
-        ))}
-      </div>
-
-      {data.testsCount > 9 && (
-        <div className="flex justify-center mt-12">
-          <Pagination
-            color="primary"
-            page={Number(filterQuery.page)}
-            total={Math.ceil(data.testsCount / 9)}
-            variant="flat"
-            onChange={handlePageChange}
-          />
+    <div className="editor-page">
+      <div className="container page">
+        <div className="row">
+          <div className="col-md-10 offset-md-1 col-xs-12">{children}</div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

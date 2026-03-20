@@ -4,12 +4,28 @@ import { pathKeys } from "@/shared/router";
 
 export const testPageRoute: RouteObject = {
   path: pathKeys.test.root,
-  lazy: async () => {
-    const [loader, Component] = await Promise.all([
-      import("./test-page.loader").then((modul) => modul.default),
-      import("./test-page.ui").then((modul) => modul.default),
-    ]);
+  children: [
+    {
+      index: true,
+      lazy: async () => {
+        const [loader, Component] = await Promise.all([
+          import("./test-page.loader").then((modul) => modul.testsPageLoader),
+          import("./test-page.ui").then((modul) => modul.ListTestPage),
+        ]);
 
-    return { loader, Component };
-  },
+        return { loader, Component };
+      },
+    },
+    {
+      path: ":slug",
+      lazy: async () => {
+        const [loader, Component] = await Promise.all([
+          import("./test-page.loader").then((m) => m.testPageLoader),
+          import("./test-page.ui").then((m) => m.default),
+        ]);
+
+        return { loader, Component };
+      },
+    },
+  ],
 };

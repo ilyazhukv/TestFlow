@@ -1,10 +1,11 @@
 import { LoaderFunctionArgs } from "react-router-dom";
+import { z } from "zod";
 
 import { queryClient } from "@/shared/queryClient";
-import { testsQueryOptions } from "@/entities/test/test.api";
+import { testQueryOptions, testsQueryOptions } from "@/entities/test/test.api";
 import { FilterQuerySchema } from "@/entities/test/test.contracts";
 
-export default async function testPageLoader({ request }: LoaderFunctionArgs) {
+export async function testsPageLoader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
 
   const filterQuery = FilterQuerySchema.parse({
@@ -17,3 +18,21 @@ export default async function testPageLoader({ request }: LoaderFunctionArgs) {
 
   return { context: { filterQuery } };
 }
+
+export async function testPageLoader(args: LoaderFunctionArgs) {
+  const parsedArgs = TestLoaderArgsSchema.parse(args);
+  const { params } = parsedArgs;
+  const { slug } = params;
+
+  await queryClient.prefetchQuery(testQueryOptions(slug));
+
+  return parsedArgs;
+}
+
+const TestLoaderArgsSchema = z.object({
+  request: z.custom<Request>(),
+  params: z.object({ slug: z.string() }),
+  context: z.any(),
+});
+
+export type EditorLoaderArgs = z.infer<typeof TestLoaderArgsSchema>;

@@ -7,11 +7,12 @@ import {
   TestDtoSchema,
   TestsDtoSchema,
   CreateTestDtoSchema,
+  UpdateTestDtoSchema,
   CategoriesDtoSchema,
 } from "./api.contracts";
 import { api } from "./api.instance";
 import { responseContract } from "./api.lib";
-import { LoginUserDto, RegisterUserDto, CreateTestDto } from "./api.types";
+import { LoginUserDto, RegisterUserDto, CreateTestDto, UpdateTestDto } from "./api.types";
 
 export function getUser(config?: AxiosRequestConfig) {
   return api.get('/user', config).then(responseContract(UserDtoSchema));
@@ -46,6 +47,11 @@ export function getAllTests(config?: AxiosRequestConfig) {
 export function createTest(createTestDto: FormData | CreateTestDto, config?: AxiosRequestConfig) {
   const data = createTestDto instanceof FormData ? createTestDto : CreateTestDtoSchema.parse(createTestDto);
   return api.post("/test/create", data, config).then(responseContract(TestDtoSchema));
+}
+
+export function updateTest( slug: string, updateTestDto: FormData | UpdateTestDto, config?: AxiosRequestConfig<UpdateTestDto>,) {
+  const data = updateTestDto instanceof FormData ? updateTestDto : UpdateTestDtoSchema.parse(updateTestDto); 
+  return api.put(`/test/${slug}`, data, config).then(responseContract(TestDtoSchema))
 }
 
 export function getCategories(config?: AxiosRequestConfig) {

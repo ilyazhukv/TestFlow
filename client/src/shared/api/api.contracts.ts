@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { slugify, z } from "zod";
 
 export const UserDtoSchema = z.object({
   user: z.object({
@@ -28,6 +28,15 @@ export const RegisterUserDtoSchema = z.object({
 });
 
 export const CreateTestDtoSchema = z.object({
+  image: z.any().nullable(),
+  title: z.string(),
+  description: z.string(),
+  category: z.string().optional(),
+  isPublic: z.boolean(),
+});
+
+export const UpdateTestDtoSchema = z.object({
+  slug: z.string(),
   image: z.any().nullable(),
   title: z.string(),
   description: z.string(),
