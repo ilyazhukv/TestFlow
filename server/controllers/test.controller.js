@@ -1,4 +1,7 @@
 import Test from "../models/Test.js";
+import Category from "../models/Category.js";
+import fs from "fs/promises";
+import path from "path";
 
 export const getTests = async (req, res) => {
   try {
@@ -6,8 +9,11 @@ export const getTests = async (req, res) => {
     const offset = parseInt(req.query.offset) || 0;
     const { tag, search } = req.query;
 
-    const query = {};
-    if (tag) query.category = tag;
+    const query = { isPublic: true };
+    if (tag) {
+      const category = await Category.findOne({ title: tag });
+      if (category) query.category = category._id
+    }
     if (search) query.title = { $regex: search, $options: "i" };
 
     const [tests, testsCount] = await Promise.all([
@@ -20,6 +26,17 @@ export const getTests = async (req, res) => {
     return res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 };
+
+export const getTest = async (req, res) => {
+  try {
+    const test = await Test.findOne({ slug: req.params.id }).populate("author", "name avatar").populate("category", "title").lean();
+    if (!test) return res.status(404).json({ errors: { tests: ["Test not found"] } });
+
+    res.json(test)
+  } catch (error) {
+    return res.status(500).json({ errors: { server: ["Internal server error"] } });
+  }
+}
 
 export const createTest = async (req, res) => {
   try {
@@ -44,6 +61,39 @@ export const createTest = async (req, res) => {
       ]);
 
     res.status(200).json(populatedTest);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ errors: { server: ["Internal server error"] } });
+  }
+};
+
+export const updateTest = async (req, res) => {
+  try {
+    const test = await Test.findOne({ slug: req.params.id });
+    if (!test) return res.status(404).json({ errors: { server: ["Test not found"] } });
+
+    if (test.author.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ errors: { server: ["Access denied"] } });
+    }
+
+    if (req.file) {
+      if (test.image) {
+        const oldImagePath = path.join(process.cwd(), test.image);
+
+        await fs.unlink(oldImagePath)
+      }
+      test.image = `/uploads/${req.file.filename}`;
+    }
+
+    const { title, description, category, isPublic } = req.body;
+    test.title = title || test.title;
+    test.description = description || test.description;
+    test.category = category || test.category;
+    test.isPublic = isPublic !== undefined ? isPublic : test.isPublic;
+
+    await test.save();
+
+    res.status(200).json(test);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ errors: { server: ["Internal server error"] } });
