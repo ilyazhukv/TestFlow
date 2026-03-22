@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { QuestionSchema } from "../question/question.contrcts";
+
 export const TestSchema = z.object({
   id: z.string(),
   slug: z.string(),
@@ -15,6 +17,7 @@ export const TestSchema = z.object({
     name: z.string(),
     avatar: z.string().nullable(),
   }),
+  questions: z.array(QuestionSchema).optional().default([]),
   isPublic: z.boolean(),
   createdAt: z.string(),
 });

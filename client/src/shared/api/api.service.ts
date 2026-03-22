@@ -9,6 +9,8 @@ import {
   CreateTestDtoSchema,
   UpdateTestDtoSchema,
   CategoriesDtoSchema,
+  QuestionDtoSchema,
+  CreateQuestionDtoSchema,
 } from "./api.contracts";
 import { api } from "./api.instance";
 import { responseContract } from "./api.lib";
@@ -49,9 +51,18 @@ export function createTest(createTestDto: FormData | CreateTestDto, config?: Axi
   return api.post("/test/create", data, config).then(responseContract(TestDtoSchema));
 }
 
-export function updateTest( slug: string, updateTestDto: FormData | UpdateTestDto, config?: AxiosRequestConfig<UpdateTestDto>,) {
+export function updateTest(slug: string, updateTestDto: FormData | UpdateTestDto, config?: AxiosRequestConfig<UpdateTestDto>,) {
   const data = updateTestDto instanceof FormData ? updateTestDto : UpdateTestDtoSchema.parse(updateTestDto); 
   return api.put(`/test/${slug}`, data, config).then(responseContract(TestDtoSchema))
+}
+
+export function deleteTest(slug: string, config?: AxiosRequestConfig) {
+  return api.delete(`/test/${slug}`, config);
+}
+
+export function createQuestion(slug: string, createQuestionDto: FormData | CreateTestDto, config?: AxiosRequestConfig) {
+  const data = createQuestionDto instanceof FormData ? createQuestionDto : CreateQuestionDtoSchema.parse(createQuestionDto);
+  return api.post(`/question/${slug}`, data, config).then(responseContract(QuestionDtoSchema));
 }
 
 export function getCategories(config?: AxiosRequestConfig) {

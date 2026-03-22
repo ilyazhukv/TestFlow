@@ -8,6 +8,7 @@ const testSchema = new mongoose.Schema({
   description: { type: String, maxLength: 256 },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", index: true },
   author: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
+  questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
   isPublic: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
@@ -23,6 +24,13 @@ testSchema.pre("validate", async function (next) {
     const suffix = this._id.toString().slice(-4);
 
     this.slug = `${baseSlug}-${suffix}`
+  }
+});
+
+testSchema.pre('findOneAndDelete', async function(next) {
+  const doc = await this.model.findOne(this.getQuery());
+  if (doc) {
+    await mongoose.model("Question").deleteMany({ testId: doc._id });
   }
 });
 

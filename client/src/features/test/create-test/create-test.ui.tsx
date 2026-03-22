@@ -116,16 +116,6 @@ export function BaseCreateTestForm() {
         <ErrorMessage as="div" errors={errors} name="category" role="alert" />
       </fieldset>
 
-      <fieldset className="form-group">
-        <input
-          disabled={isPending}
-          placeholder="Test Public"
-          type="checkbox"
-          {...register("isPublic")}
-        />
-        <ErrorMessage as="div" errors={errors} name="isPublic" role="alert" />
-      </fieldset>
-
       <Button
         className="btn btn-lg pull-xs-right btn-primary"
         data-test="article-submit"

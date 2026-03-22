@@ -29,7 +29,7 @@ export const getTests = async (req, res) => {
 
 export const getTest = async (req, res) => {
   try {
-    const test = await Test.findOne({ slug: req.params.id }).populate("author", "name avatar").populate("category", "title").lean();
+    const test = await Test.findOne({ slug: req.params.id }).populate("author", "name avatar").populate("category", "title").populate("questions").lean();
     if (!test) return res.status(404).json({ errors: { tests: ["Test not found"] } });
 
     res.json(test)
@@ -48,7 +48,7 @@ export const createTest = async (req, res) => {
       title,
       description,
       category,
-      isPublic: isPublic,
+      isPublic: false,
       author: req.user.id
     });
 
@@ -72,15 +72,14 @@ export const updateTest = async (req, res) => {
     const test = await Test.findOne({ slug: req.params.id });
     if (!test) return res.status(404).json({ errors: { server: ["Test not found"] } });
 
-    if (test.author.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (test.author.toString() !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({ errors: { server: ["Access denied"] } });
     }
 
     if (req.file) {
       if (test.image) {
-        const oldImagePath = path.join(process.cwd(), test.image);
-
-        await fs.unlink(oldImagePath)
+        const imagePath = path.join(process.cwd(), test.image);
+        await fs.unlink(imagePath)
       }
       test.image = `/uploads/${req.file.filename}`;
     }
@@ -95,7 +94,37 @@ export const updateTest = async (req, res) => {
 
     res.status(200).json(test);
   } catch (error) {
-    console.error(error);
+    return res.status(500).json({ errors: { server: ["Internal server error"] } });
+  }
+};
+
+export const deleteTest = async (req, res) => {
+  try {
+    const test = await Test.findOne({ slug: req.params.id });
+    if (!test) return res.status(404).json({ errors: { server: ["Test not found"] } });
+
+    if (test.author.toString() !== req.user.id && req.user.role !== "admin") {
+      return res.status(403).json({ errors: { server: ["Access denied"] } });
+    }
+
+    if (test.image) {
+      try {
+        const relativePath = test.image.startsWith('/') ? test.image.substring(1) : test.image;
+        const absolutePath = path.join(process.cwd(), relativePath);
+        
+        await fs.unlink(absolutePath);
+        console.log("File deleted:", absolutePath);
+      } catch (err) {
+        console.error("File system error (skipping):", err.message);
+      }
+    }
+
+    await Test.findOneAndDelete({ slug: req.params.id });
+
+    return res.status(200).json({ message: "The test has been deleted successfully" });
+
+  } catch (error) {
+    console.error("Critical Delete Error:", error);
     return res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 };

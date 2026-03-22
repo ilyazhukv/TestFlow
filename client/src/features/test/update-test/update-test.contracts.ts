@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { QuestionSchema } from "@/entities/question/question.contrcts";
+
 export const UpdateTestSchema = z.object({
   slug: z.string(),
   image: z.any().optional(),
@@ -12,5 +14,6 @@ export const UpdateTestSchema = z.object({
     .min(1, { message: "Minimum characters 1" })
     .max(256, { message: "Maximum characters 256" }),
   category: z.string().optional(),
+  questions: z.any().optional(),
   isPublic: z.boolean(),
 });

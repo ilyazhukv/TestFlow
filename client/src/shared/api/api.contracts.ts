@@ -1,4 +1,4 @@
-import { slugify, z } from "zod";
+import { optional, slugify, z } from "zod";
 
 export const UserDtoSchema = z.object({
   user: z.object({
@@ -44,23 +44,50 @@ export const UpdateTestDtoSchema = z.object({
   isPublic: z.boolean(),
 });
 
+export const OptionDtoSchema = z.object({
+  _id: z.string().optional(),
+  text: z.string(),
+  isCorrect: z.boolean().default(false),
+});
+
+export const QuestionDtoSchema = z.object({
+  _id: z.string(),
+  testId: z.string(),
+  text: z.string(),
+  image: z.string().optional().nullable(),
+  type: z.enum(["one_answer", "several_answers"]),
+  options: z.array(OptionDtoSchema).min(2),
+  score: z.number().optional(),
+});
+
+export const CreateQuestionDtoSchema = z.object({
+  text: z.string().min(1),
+  type: z.enum(["one_answer", "several_answers"]),
+  optional: z.array(OptionDtoSchema).min(2),
+  score: z.number().optional(),
+  image: z.any().optional(),
+});
+
+export const CategoryDtoSchema = z.object({
+  _id: z.string(),
+  title: z.string(),
+});
+
+export const CategoriesDtoSchema = z.array(CategoryDtoSchema);
+
 export const TestDtoSchema = z.object({
   _id: z.string(),
   slug: z.string(),
   image: z.string().nullable(),
   title: z.string(),
   description: z.string(),
-  category: z
-    .object({
-      _id: z.string(),
-      title: z.string(),
-    })
-    .nullable(),
+  category: CategoryDtoSchema.nullable(),
   author: z.object({
     _id: z.string(),
     name: z.string(),
     avatar: z.string().nullable().optional(),
   }),
+  questions: z.array(z.union([QuestionDtoSchema, z.string()])).default([]),
   isPublic: z.boolean(),
   createdAt: z.string(),
 });
@@ -76,13 +103,6 @@ export const FilterQueryDtoSchema = z.object({
   tag: z.string().optional(),
   author: z.string().optional(),
 });
-
-export const CategoryDtoSchema = z.object({
-  _id: z.string(),
-  title: z.string(),
-});
-
-export const CategoriesDtoSchema = z.array(CategoryDtoSchema);
 
 export const ApiErrorDataDtoSchema = z.object({
   errors: z.record(z.string(), z.array(z.string())),

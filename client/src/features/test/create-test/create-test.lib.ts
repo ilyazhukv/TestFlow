@@ -12,7 +12,6 @@ export function transformCreateTestToFormData(
   formData.append("title", createTest.title);
   formData.append("description", createTest.description);
   formData.append("category", createTest.category || "");
-  formData.append("isPublic", String(createTest.isPublic));
 
   return formData;
 }
