@@ -1,11 +1,13 @@
-import { QuestionDto, OptionDto } from "@/shared/api/api.types";
-import { Question, Option } from "./question.types";
+import { Question } from "./question.types";
 
-export function transformQuestionDtoToQuestion(questionDto: QuestionDto): Question {
+import { QuestionDto } from "@/shared/api/api.types";
+
+export function transformQuestionDtoToQuestion(
+  questionDto: QuestionDto,
+): Question {
   const question = questionDto;
 
   return {
     ...question,
   };
 }
-

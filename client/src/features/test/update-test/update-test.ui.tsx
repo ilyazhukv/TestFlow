@@ -1,9 +1,12 @@
-import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@heroui/button";
+import { Input, Textarea } from "@heroui/input";
+import { Select, SelectItem } from "@heroui/select";
+import { Checkbox } from "@heroui/checkbox";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Divider } from "@heroui/divider";
 import { ErrorBoundary } from "react-error-boundary";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { DeleteTestButton } from "../delete-test/delete-test.ui";
@@ -15,7 +18,6 @@ import { transformTestToUpdateTest } from "./update-test.lib";
 import { useUpdateTestMutation } from "./update-test.mutation";
 
 import { categoriesQueryOptions } from "@/entities/category/category.api";
-import { pathKeys } from "@/shared/router";
 import { testQueryOptions } from "@/entities/test/test.api";
 import { QuestionCard } from "@/entities/question/question-card.ui";
 
@@ -31,28 +33,18 @@ export function UpdateTestForm(props: UpdateTestFormProps) {
   );
 }
 
-function BaseUpdateTestForm(props: UpdateTestFormProps) {
-  const { slug } = props;
-
-  const navigate = useNavigate();
-
-  const { data: categories, isLoading: isCatsLoading } = useSuspenseQuery(
-    categoriesQueryOptions(),
-  );
+function BaseUpdateTestForm({ slug }: UpdateTestFormProps) {
+  const { data: categories } = useSuspenseQuery(categoriesQueryOptions());
   const { data: test } = useSuspenseQuery(testQueryOptions(slug));
 
   const { mutate, isPending, isError, error } = useUpdateTestMutation({
     mutationKey: [slug],
-    onSuccess: (updatedTest) => {
-      navigate(pathKeys.test.bySlug(updatedTest.slug), { replace: true });
-    },
   });
-
-  const mutationErrors = error?.response?.data || [error?.message];
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isDirty, isValid },
   } = useForm<UpdateTest>({
     mode: "onTouched",
@@ -60,105 +52,145 @@ function BaseUpdateTestForm(props: UpdateTestFormProps) {
     defaultValues: transformTestToUpdateTest(test),
   });
 
-  const canSubmit = [isDirty, isValid, !isPending].every(Boolean);
+  const mutationErrors = error?.response?.data || [error?.message];
+  const canSubmit = isDirty && isValid && !isPending;
 
   const onValid = (updateTest: UpdateTest) => {
     mutate(updateTest);
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onValid)}>
-        <h1>Editer Test Page</h1>
+    <div className="max-w-4xl mx-auto py-8 px-4 flex flex-col gap-8">
+      <Card className="shadow-sm">
+        <CardHeader className="flex justify-between items-center px-6 pt-6">
+          <div>
+            <h1 className="text-2xl font-bold">Test settings</h1>
+            <p className="text-default-500 text-small text-gray-400">
+              Editing basic information
+            </p>
+          </div>
+          <DeleteTestButton slug={slug} />
+        </CardHeader>
 
-        {isError && (
-          <ul>
-            {mutationErrors.map((err) => (
-              <li key={err}>{err}</li>
-            ))}
-          </ul>
-        )}
-
-        <fieldset className="form-group">
-          <input
-            accept="image/*"
-            disabled={isPending}
-            placeholder="Test Image"
-            type="file"
-            {...register("image")}
-          />
-          <ErrorMessage as="div" errors={errors} name="image" role="alert" />
-        </fieldset>
-
-        <fieldset className="form-group">
-          <input
-            disabled={isPending}
-            placeholder="Test Title"
-            type="text"
-            {...register("title")}
-          />
-          <ErrorMessage as="div" errors={errors} name="title" role="alert" />
-        </fieldset>
-
-        <fieldset className="form-group">
-          <input
-            disabled={isPending}
-            placeholder="Test Description"
-            type="text"
-            {...register("description")}
-          />
-          <ErrorMessage
-            as="div"
-            errors={errors}
-            name="description"
-            role="alert"
-          />
-        </fieldset>
-
-        <fieldset className="form-group">
-          <select
-            disabled={isPending || isCatsLoading}
-            {...register("category")}
+        <CardBody className="px-6 pb-6">
+          <form
+            className="flex flex-col gap-6 mt-4"
+            onSubmit={handleSubmit(onValid)}
           >
-            <option value="">Select Category</option>
-            {categories?.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.title}
-              </option>
-            ))}
-          </select>
-          <ErrorMessage as="div" errors={errors} name="category" role="alert" />
-        </fieldset>
+            {isError && (
+              <div className="p-3 rounded-medium bg-danger-50 text-danger text-tiny">
+                {mutationErrors.map((err, i) => (
+                  <p key={i}>{err}</p>
+                ))}
+              </div>
+            )}
 
-        <fieldset className="form-group">
-          <input
-            disabled={isPending}
-            placeholder="Test Public"
-            type="checkbox"
-            {...register("isPublic")}
-          />
-          <ErrorMessage as="div" errors={errors} name="isPublic" role="alert" />
-        </fieldset>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="Title"
+                labelPlacement="outside"
+                placeholder="Title..."
+                {...register("title")}
+                errorMessage={errors.title?.message}
+                isDisabled={isPending}
+                isInvalid={!!errors.title}
+              />
 
-        <Button
-          className="btn btn-lg pull-xs-right btn-primary"
-          data-test="Test-submit"
-          disabled={!canSubmit}
-          type="submit"
-        >
-          Update Test
-        </Button>
+              <Controller
+                control={control}
+                name="category"
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    errorMessage={errors.category?.message}
+                    isDisabled={isPending}
+                    isInvalid={!!errors.category}
+                    label="Category"
+                    labelPlacement="outside"
+                    placeholder="Category..."
+                    selectedKeys={field.value ? [field.value] : []}
+                  >
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} textValue={cat.title}>
+                        {cat.title}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
+              />
+            </div>
 
-        <DeleteTestButton slug={slug} />
-      </form>
+            <Textarea
+              label="Description"
+              labelPlacement="outside"
+              placeholder="Description..."
+              {...register("description")}
+              errorMessage={errors.description?.message}
+              isDisabled={isPending}
+              isInvalid={!!errors.description}
+            />
 
-      <div className="questions-section mt-10">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Test questions</h2>
+            <div className="flex flex-col gap-4">
+              <Input
+                accept="image/*"
+                label="Image"
+                labelPlacement="outside"
+                type="file"
+                {...register("image")}
+                isDisabled={isPending}
+              />
+
+              <Controller
+                control={control}
+                name="isPublic"
+                render={({ field: { value, onChange, ...rest } }) => (
+                  <Checkbox
+                    {...rest}
+                    isDisabled={isPending}
+                    isSelected={value}
+                    onValueChange={onChange}
+                  >
+                    Public test
+                  </Checkbox>
+                )}
+              />
+            </div>
+
+            <Button
+              className="font-semibold"
+              color="primary"
+              disabled={!canSubmit}
+              isLoading={isPending}
+              size="lg"
+              type="submit"
+            >
+              Save changes
+            </Button>
+          </form>
+        </CardBody>
+      </Card>
+
+      <Divider />
+
+      <section className="flex flex-col gap-6">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-2xl font-bold text-gray-400">Test questions</h2>
+          <p className="text-default-500 text-small">
+            Managing your list of questions and answers
+          </p>
         </div>
 
+        <Card className="border-2 border-dashed border-default-200 bg-transparent shadow-none">
+          <CardHeader className="px-6 pt-6">
+            <h3 className="text-lg font-semibold">Add Question</h3>
+          </CardHeader>
+          <CardBody className="px-6 pb-6">
+            <AddQuestionForm testSlug={slug} />
+          </CardBody>
+        </Card>
+
         {test.questions.length > 0 ? (
-          <div className="questions-list">
+          <div className="flex flex-col gap-4 text-gray-400">
             {test.questions.map((question, index) => (
               <QuestionCard
                 key={question._id}
@@ -168,16 +200,13 @@ function BaseUpdateTestForm(props: UpdateTestFormProps) {
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 mb-6">
-            There are no questions in this test.
-          </p>
+          <Card className="bg-default-50 border-none">
+            <CardBody className="py-10 text-center text-default-500">
+              There are no questions in this test yet.
+            </CardBody>
+          </Card>
         )}
-
-        <div className="mt-8 p-6 border-2 border-dashed border-gray-200 rounded-xl">
-          <h3 className="text-lg font-semibold mb-4">Add a new question</h3>
-          <AddQuestionForm testSlug={slug} />
-        </div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 }

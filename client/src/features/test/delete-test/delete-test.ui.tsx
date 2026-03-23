@@ -22,7 +22,12 @@ export function DeleteTestButton(props: { slug: string }) {
   };
 
   return (
-    <Button onClick={handleClick} disabled={isPending} type="button">
+    <Button
+      className="bg-danger-50"
+      disabled={isPending}
+      type="button"
+      onClick={handleClick}
+    >
       Delete Test
     </Button>
   );

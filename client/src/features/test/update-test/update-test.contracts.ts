@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { QuestionSchema } from "@/entities/question/question.contrcts";
-
 export const UpdateTestSchema = z.object({
   slug: z.string(),
   image: z.any().optional(),

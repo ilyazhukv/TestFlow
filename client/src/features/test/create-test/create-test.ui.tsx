@@ -1,8 +1,10 @@
-import { ErrorMessage } from "@hookform/error-message";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@heroui/button";
+import { Input, Textarea } from "@heroui/input";
+import { Select, SelectItem } from "@heroui/select";
+import { Card, CardBody, CardHeader } from "@heroui/card";
 import { ErrorBoundary } from "react-error-boundary";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -23,6 +25,7 @@ export function CreateTestForm() {
 
 export function BaseCreateTestForm() {
   const navigate = useNavigate();
+
   const { data: categories, isLoading: isCatsLoading } = useQuery(
     categoriesQueryOptions(),
   );
@@ -30,6 +33,7 @@ export function BaseCreateTestForm() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isDirty, isValid },
   } = useForm<CreateTest>({
     mode: "onTouched",
@@ -50,80 +54,99 @@ export function BaseCreateTestForm() {
   });
 
   const mutationErrors = error?.response?.data || [error?.message];
-  const canSubmit = [isDirty, isValid, !isPending].every(Boolean);
+  const canSubmit = isDirty && isValid && !isPending;
 
   const onValid = (createTest: CreateTest) => {
     mutate(createTest);
   };
 
   return (
-    <form onSubmit={handleSubmit(onValid)}>
+    <Card className="max-w-xl mx-auto mt-8">
+      <CardHeader className="flex flex-col gap-1 items-start px-6 pt-6">
+        <h1 className="text-2xl font-bold">Creating a new test</h1>
+        <p className="text-default-500">Fill in the details to create</p>
+      </CardHeader>
 
+      <CardBody>
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit(onValid)}>
+          {isError && (
+            <div className="p-3 rounded-medium bg-danger-50 text-danger text-small">
+              <ul className="list-disc list-inside">
+                {mutationErrors.map((err, i) => (
+                  <li key={i}>{err}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-      {isError && (
-        <ul>
-          {mutationErrors.map((err) => (
-            <li key={err}>{err}</li>
-          ))}
-        </ul>
-      )}
+          <div className="flex flex-col gap-4">
+            <Input
+              accept="image/*"
+              label="Image..."
+              labelPlacement="outside"
+              type="file"
+              {...register("image")}
+              isDisabled={isPending}
+            />
 
-      <fieldset className="form-group">
-        <input
-          accept="image/*"
-          disabled={isPending}
-          placeholder="Test Image"
-          type="file"
-          {...register("image")}
-        />
-        <ErrorMessage as="div" errors={errors} name="image" role="alert" />
-      </fieldset>
+            <Input
+              label="Title"
+              labelPlacement="outside"
+              placeholder="Title..."
+              {...register("title")}
+              errorMessage={errors.title?.message}
+              isDisabled={isPending}
+              isInvalid={!!errors.title}
+            />
 
-      <fieldset className="form-group">
-        <input
-          disabled={isPending}
-          placeholder="Test Title"
-          type="text"
-          {...register("title")}
-        />
-        <ErrorMessage as="div" errors={errors} name="title" role="alert" />
-      </fieldset>
+            <Textarea
+              label="Description"
+              labelPlacement="outside"
+              placeholder="Description..."
+              {...register("description")}
+              errorMessage={errors.description?.message}
+              isDisabled={isPending}
+              isInvalid={!!errors.description}
+            />
 
-      <fieldset className="form-group">
-        <input
-          disabled={isPending}
-          placeholder="Test Description"
-          type="text"
-          {...register("description")}
-        />
-        <ErrorMessage
-          as="div"
-          errors={errors}
-          name="description"
-          role="alert"
-        />
-      </fieldset>
+            <Controller
+              control={control}
+              name="category"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  errorMessage={errors.category?.message}
+                  isDisabled={isPending || isCatsLoading}
+                  isInvalid={!!errors.category}
+                  isLoading={isCatsLoading}
+                  label="Category"
+                  labelPlacement="outside"
+                  placeholder="Category..."
+                  selectedKeys={field.value ? [field.value] : []}
+                >
+                  {(categories ?? []).map((category) => (
+                    <SelectItem key={category.id} textValue={category.title}>
+                      {category.title}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </div>
 
-      <fieldset className="form-group">
-        <select disabled={isPending || isCatsLoading} {...register("category")}>
-          <option value="">Select Category</option>
-          {categories?.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.title}
-            </option>
-          ))}
-        </select>
-        <ErrorMessage as="div" errors={errors} name="category" role="alert" />
-      </fieldset>
-
-      <Button
-        className="btn btn-lg pull-xs-right btn-primary"
-        data-test="article-submit"
-        disabled={!canSubmit}
-        type="submit"
-      >
-        Create Test
-      </Button>
-    </form>
+          <Button
+            fullWidth
+            className="mt-2"
+            color="primary"
+            disabled={!canSubmit}
+            isLoading={isPending}
+            size="lg"
+            type="submit"
+          >
+            Create Test
+          </Button>
+        </form>
+      </CardBody>
+    </Card>
   );
 }

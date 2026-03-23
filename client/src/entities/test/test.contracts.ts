@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { QuestionSchema } from "../question/question.contrcts";
+import { QuestionSchema } from "../question/question.contracts";
 
 export const TestSchema = z.object({
   id: z.string(),

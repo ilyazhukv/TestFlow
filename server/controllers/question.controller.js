@@ -33,3 +33,11 @@ export const createQuestion = async (req, res) => {
     return res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 }
+
+export const deleteQuestion = async (req, res) => {
+  try {
+    const { questionId } = req.body;
+  } catch (error) {
+    
+  }
+}

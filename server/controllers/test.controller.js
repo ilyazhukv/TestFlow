@@ -41,14 +41,13 @@ export const getTest = async (req, res) => {
 export const createTest = async (req, res) => {
   try {
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-    const { title, description, category, isPublic } = req.body;
+    const { title, description, category } = req.body;
 
     const newTest = new Test({
       image: imagePath,
       title,
       description,
       category,
-      isPublic: false,
       author: req.user.id
     });
 
@@ -92,7 +91,9 @@ export const updateTest = async (req, res) => {
 
     await test.save();
 
-    res.status(200).json(test);
+    const populatedTest = await Test.findOne({ slug: req.params.id }).populate("author", "name avatar").populate("category", "title").populate("questions").lean();
+
+    res.status(200).json(populatedTest);
   } catch (error) {
     return res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
