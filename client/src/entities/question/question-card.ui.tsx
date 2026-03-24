@@ -4,6 +4,8 @@ import { Chip } from "@heroui/chip";
 
 import { Question } from "./question.types";
 
+import { ENV } from "@/shared/config/env";
+
 interface Props {
   question: Question;
   index: number;
@@ -32,7 +34,7 @@ export function QuestionCard({ question, index, actionButtons }: Props) {
             <Image
               alt="Question illustration"
               className="object-cover w-full max-h-[300px]"
-              src={`${import.meta.env.VITE_API_URL}${question.image}`}
+              src={`${ENV.API_URL}${question.image}`}
               width="100%"
             />
           </div>

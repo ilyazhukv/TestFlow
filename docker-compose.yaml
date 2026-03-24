@@ -13,21 +13,26 @@ services:
     ports:
       - "5000:5000"
     volumes:
+      - ./server/uploads:/app/uploads
+    # === DEV ONLY: DELETE FOR PROD ===
       - ./server:/app
       - /app/node_modules
+    command: npx nodemon -L app.js 
+    # =================================
     env_file:
       - ./server/.env
     depends_on:
       - data
 
   client:
-    build: ./client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=/api
     container_name: client
     ports:
-      - "5173:5173"
-    volumes:
-      - ./client:/app
-      - /app/node_modules
+      - "80:80"
     env_file:
       - ./client/.env
     depends_on:

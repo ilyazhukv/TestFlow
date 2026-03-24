@@ -1,10 +1,12 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
+import { ENV } from "../config/env";
+
 import { ApiErrorDataDtoSchema } from "./api.contracts";
 import { normalizeValidationErrors } from "./api.lib";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: ENV.API_URL,
   withCredentials: true,
 });
 

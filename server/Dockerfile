@@ -1,13 +1,13 @@
-FROM node:24.13.1-alpine3.22
+FROM node:24.13.1-alpine3.23 AS builder
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --omit=dev && npm cache clean --force
 
 COPY . .
 
 EXPOSE 5000
 
-ENTRYPOINT [ "npm", "run", "dev" ]
+CMD [ "node", "app.js" ]

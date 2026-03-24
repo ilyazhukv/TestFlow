@@ -22,7 +22,7 @@ const swaggerDocument = yaml.parse(swaggerFile);
 
 const app = e();
 
-app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
+app.use(cors({ credentials: true, origin: [process.env.CLIENT_URL, process.env.DEV_CLIENT_URL] }));
 app.use(e.json({limit: "10mb"}));
 app.use(cookieParser());
 

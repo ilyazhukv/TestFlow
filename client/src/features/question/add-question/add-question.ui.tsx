@@ -4,7 +4,6 @@ import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Checkbox } from "@heroui/checkbox";
-import { Card, CardBody } from "@heroui/card";
 import { Divider } from "@heroui/divider";
 import { TrashBin } from "@gravity-ui/icons";
 

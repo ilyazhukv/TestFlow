@@ -1,4 +1,4 @@
-import { optional, slugify, z } from "zod";
+import { z } from "zod";
 
 export const UserDtoSchema = z.object({
   user: z.object({

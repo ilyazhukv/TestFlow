@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 import { Test } from "./test.types";
 
+import { ENV } from "@/shared/config/env";
+
 export function TestCard({ data }: { data: Test }) {
   return (
     <Card className="py-4 shadow-sm hover:shadow-md transition-shadow">
@@ -26,7 +28,7 @@ export function TestCard({ data }: { data: Test }) {
             alt={data.title}
             className="object-cover rounded-xl"
             height={180}
-            src={`${import.meta.env.VITE_API_URL}${data.image}`}
+            src={`${ENV.API_URL}${data.image}`}
             width="100%"
           />
           <p className="text-default-500 text-small px-2 line-clamp-2">

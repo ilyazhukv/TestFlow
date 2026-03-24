@@ -1,13 +1,25 @@
-FROM node:24.13.1-alpine3.22
+FROM node:24.13.1-alpine3.23 AS builder
 
 WORKDIR /app
 
+ARG VITE_API_URL
+
+ENV VITE_API_URL=$VITE_API_URL
+
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci 
 
 COPY . .
 
-EXPOSE 5000
+RUN npm run build
 
-ENTRYPOINT [ "npm", "run", "dev" ]
+FROM nginx:stable-alpine3.23
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD [ "nginx", "-g", "daemon off;" ]
