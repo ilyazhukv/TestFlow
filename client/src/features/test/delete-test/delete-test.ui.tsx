@@ -1,4 +1,5 @@
 import { Button } from "@heroui/button";
+import { TrashBin } from "@gravity-ui/icons";
 import { useNavigate } from "react-router-dom";
 
 import { useDeleteTestMutation } from "./delete-test.mutation";
@@ -28,7 +29,7 @@ export function DeleteTestButton(props: { slug: string }) {
       type="button"
       onClick={handleClick}
     >
-      Delete Test
+      <TrashBin />
     </Button>
   );
 }

@@ -4,28 +4,27 @@ import {
   UseMutationOptions,
 } from "@tanstack/react-query";
 
-import { deleteTest } from "@/shared/api/api.service";
+import { deleteQuestion } from "@/shared/api/api.service";
 import { queryClient } from "@/shared/queryClient";
-import { TESTS_ROOT_QUERY_KEY } from "@/entities/test/test.api";
 
-export function useDeleteTestMutation(
+export function useDeleteQuestionMutation(
   options: Pick<
-    UseMutationOptions<unknown, DefaultError, string, unknown>,
+    UseMutationOptions<unknown, DefaultError, {slug: string, questionId: string}, unknown>,
     "mutationKey" | "onMutate" | "onSuccess" | "onError" | "onSettled"
   > = {},
 ) {
   const { mutationKey = [], onMutate, onSuccess, onError, onSettled } = options;
 
   return useMutation({
-    mutationKey: ["test", "delete", ...mutationKey],
+    mutationKey: ["question", "delete", ...mutationKey],
 
-    mutationFn: (slug: string) => deleteTest(slug),
+    mutationFn: ({ slug, questionId }) => deleteQuestion(slug, questionId),
 
     onMutate,
 
     onSuccess: async (...args) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: TESTS_ROOT_QUERY_KEY }),
+        queryClient.invalidateQueries({ queryKey: ["test"] }),
         onSuccess?.(...args),
       ]);
     },

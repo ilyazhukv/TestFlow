@@ -29,7 +29,7 @@ export const getTests = async (req, res) => {
 
 export const getTest = async (req, res) => {
   try {
-    const test = await Test.findOne({ slug: req.params.id }).populate("author", "name avatar").populate("category", "title").populate("questions").lean();
+    const test = await Test.findOne({ slug: req.params.slug }).populate("author", "name avatar").populate("category", "title").populate("questions").lean();
     if (!test) return res.status(404).json({ errors: { tests: ["Test not found"] } });
 
     res.json(test)
@@ -68,7 +68,7 @@ export const createTest = async (req, res) => {
 
 export const updateTest = async (req, res) => {
   try {
-    const test = await Test.findOne({ slug: req.params.id });
+    const test = await Test.findOne({ slug: req.params.slug });
     if (!test) return res.status(404).json({ errors: { server: ["Test not found"] } });
 
     if (test.author.toString() !== req.user.id && req.user.role !== "admin") {
@@ -91,7 +91,7 @@ export const updateTest = async (req, res) => {
 
     await test.save();
 
-    const populatedTest = await Test.findOne({ slug: req.params.id }).populate("author", "name avatar").populate("category", "title").populate("questions").lean();
+    const populatedTest = await Test.findOne({ slug: req.params.slug }).populate("author", "name avatar").populate("category", "title").populate("questions").lean();
 
     res.status(200).json(populatedTest);
   } catch (error) {
@@ -101,7 +101,7 @@ export const updateTest = async (req, res) => {
 
 export const deleteTest = async (req, res) => {
   try {
-    const test = await Test.findOne({ slug: req.params.id });
+    const test = await Test.findOne({ slug: req.params.slug });
     if (!test) return res.status(404).json({ errors: { server: ["Test not found"] } });
 
     if (test.author.toString() !== req.user.id && req.user.role !== "admin") {
@@ -120,7 +120,7 @@ export const deleteTest = async (req, res) => {
       }
     }
 
-    await Test.findOneAndDelete({ slug: req.params.id });
+    await Test.findOneAndDelete({ slug: req.params.slug });
 
     return res.status(200).json({ message: "The test has been deleted successfully" });
 

@@ -196,6 +196,7 @@ function BaseUpdateTestForm({ slug }: UpdateTestFormProps) {
                 key={question._id}
                 index={index}
                 question={question}
+                slug={slug}
               />
             ))}
           </div>

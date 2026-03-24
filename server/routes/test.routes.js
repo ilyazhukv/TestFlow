@@ -6,9 +6,9 @@ import upload from "../middlewares/upload.middleware.js"
 const router = e.Router();
 
 router.post("/create", authMiddleware, upload.single("image"), createTest);
-router.get("/:id", getTest)
+router.get("/:slug", getTest)
 router.get("/", getTests);
-router.put("/:id", authMiddleware, upload.single("image"), updateTest);
-router.delete("/:id", authMiddleware, deleteTest);
+router.put("/:slug", authMiddleware, upload.single("image"), updateTest);
+router.delete("/:slug", authMiddleware, deleteTest);
 
 export default router;

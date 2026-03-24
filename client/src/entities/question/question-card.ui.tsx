@@ -5,14 +5,15 @@ import { Chip } from "@heroui/chip";
 import { Question } from "./question.types";
 
 import { ENV } from "@/shared/config/env";
+import { DeleteQuestButton } from "@/features/question/delete-question/delete-question.ui";
 
 interface Props {
   question: Question;
   index: number;
-  actionButtons?: React.ReactNode;
+  slug: string;
 }
 
-export function QuestionCard({ question, index, actionButtons }: Props) {
+export function QuestionCard({ question, index, slug }: Props) {
   return (
     <Card className="mb-4 shadow-sm border-1 border-default-200">
       <CardHeader className="flex flex-col gap-3 px-4 pt-4 pb-2">
@@ -26,7 +27,7 @@ export function QuestionCard({ question, index, actionButtons }: Props) {
               {question.score} points
             </Chip>
           </div>
-          <div className="flex-shrink-0">{actionButtons}</div>
+          <DeleteQuestButton questionId={question._id} slug={slug} />
         </div>
 
         {question.image && (

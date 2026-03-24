@@ -65,6 +65,10 @@ export function createQuestion(slug: string, createQuestionDto: FormData | Creat
   return api.post(`/question/${slug}`, data, config).then(responseContract(QuestionDtoSchema));
 }
 
+export function deleteQuestion(slug: string, qid: string, config?: AxiosRequestConfig) {
+  return api.delete(`/question/${slug}`, {...config, data: {questionId: qid}});
+}
+
 export function getCategories(config?: AxiosRequestConfig) {
-  return api.get("/category", config).then(responseContract(CategoriesDtoSchema))
+  return api.get("/category", config).then(responseContract(CategoriesDtoSchema));
 }
