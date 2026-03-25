@@ -10,6 +10,7 @@ export function transformTestDtoToTest(testDto: TestDto): Test {
     image: test.image || null,
     title: test.title,
     description: test.description,
+    timeLimit: test.timeLimit,
     isPublic: test.isPublic,
     createdAt: test.createdAt,
     author: {

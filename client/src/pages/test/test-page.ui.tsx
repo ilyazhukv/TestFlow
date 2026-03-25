@@ -1,30 +1,31 @@
 import { ReactNode } from "react";
 import { useLoaderData } from "react-router-dom";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { EditorLoaderArgs } from "./test-page.loader";
 
-import { ListTests } from "@/features/test/list-test/list-test.ui";
-import { testQueryOptions } from "@/entities/test/test.api";
+import { ListTest } from "@/features/test/list-test/list-test.ui";
+import { TestPassing } from "@/features/test/passing-test/passing-test.ui";
 
 export function ListTestPage() {
-  return(
-    <TestPageWrapperr>
-      <ListTests />
-    </TestPageWrapperr>
-  )
+  return (
+    <TestPageWrapper>
+      <ListTest />
+    </TestPageWrapper>
+  );
 }
 
-export default function TestPage() {
+export function TestPage() {
   const { params } = useLoaderData() as EditorLoaderArgs;
   const { slug } = params;
 
-  const { data: test } = useSuspenseQuery(testQueryOptions(slug));
-
-  return <div>{test.slug}</div>;
+  return (
+    <TestPageWrapper>
+      <TestPassing slug={slug} />
+    </TestPageWrapper>
+  );
 }
 
-function TestPageWrapperr(props: { children: ReactNode }) {
+function TestPageWrapper(props: { children: ReactNode }) {
   const { children } = props;
 
   return (

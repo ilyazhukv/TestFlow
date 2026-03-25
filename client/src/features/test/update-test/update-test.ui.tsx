@@ -21,9 +21,9 @@ import { categoriesQueryOptions } from "@/entities/category/category.api";
 import { testQueryOptions } from "@/entities/test/test.api";
 import { QuestionCard } from "@/entities/question/question-card.ui";
 
-type UpdateTestFormProps = {
+interface UpdateTestFormProps {
   slug: string;
-};
+}
 
 export function UpdateTestForm(props: UpdateTestFormProps) {
   return (
@@ -153,6 +153,22 @@ function BaseUpdateTestForm({ slug }: UpdateTestFormProps) {
                     Public test
                   </Checkbox>
                 )}
+              />
+
+              <Input
+                label="Time Limit"
+                labelPlacement="outside"
+                placeholder="0"
+                type="number"
+                {...register("timeLimit", { valueAsNumber: true })}
+                errorMessage={errors.timeLimit?.message}
+                isDisabled={isPending}
+                isInvalid={!!errors.timeLimit}
+                startContent={
+                  <div className="pointer-events-none flex items-center">
+                    <span className="text-default-400 text-small">min</span>
+                  </div>
+                }
               />
             </div>
 

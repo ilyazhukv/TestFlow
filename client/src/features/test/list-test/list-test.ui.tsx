@@ -1,11 +1,20 @@
 import { useLoaderData, useSearchParams } from "react-router-dom";
+import { ErrorBoundary } from "react-error-boundary";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Pagination } from "@heroui/react";
 
 import { testsQueryOptions } from "@/entities/test/test.api";
 import { TestCard } from "@/entities/test/test-card.ui";
 
-export function ListTests() {
+export function ListTest() {
+  return (
+    <ErrorBoundary fallback={"Something went wrong..."}>
+      <BaseListTests />
+    </ErrorBoundary>
+  );
+}
+
+export function BaseListTests() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { context } = useLoaderData() as any;
   const { filterQuery } = context;

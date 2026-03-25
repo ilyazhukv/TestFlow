@@ -81,6 +81,7 @@ export const TestDtoSchema = z.object({
   image: z.string().nullable(),
   title: z.string(),
   description: z.string(),
+  timeLimit: z.number(),
   category: CategoryDtoSchema.nullable(),
   author: z.object({
     _id: z.string(),

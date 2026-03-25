@@ -13,6 +13,7 @@ export function transformUpdateTestToFormData(
 
   formData.append("title", updateTest.title);
   formData.append("description", updateTest.description);
+  formData.append("timeLimit", String(updateTest.timeLimit));
   formData.append("category", updateTest.category || "");
   formData.append("isPublic", String(updateTest.isPublic));
 
@@ -24,7 +25,8 @@ export function transformTestToUpdateTest(test: Test): UpdateTest {
     slug: test.slug,
     title: test.title,
     description: test.description,
-    isPublic: test.isPublic,
+    timeLimit: test.timeLimit,
     category: test.category?.id || "",
+    isPublic: test.isPublic,
   };
 }

@@ -11,6 +11,7 @@ export const UpdateTestSchema = z.object({
     .string()
     .min(1, { message: "Minimum characters 1" })
     .max(256, { message: "Maximum characters 256" }),
+  timeLimit: z.number().optional(),
   category: z.string().optional(),
   questions: z.any().optional(),
   isPublic: z.boolean(),

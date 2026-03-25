@@ -6,9 +6,11 @@ import { useDeleteTestMutation } from "./delete-test.mutation";
 
 import { pathKeys } from "@/shared/router";
 
-export function DeleteTestButton(props: { slug: string }) {
-  const { slug } = props;
+interface DeleteTestProps {
+  slug: string;
+}
 
+export function DeleteTestButton({ slug }: DeleteTestProps) {
   const navigate = useNavigate();
 
   const { mutate, isPending } = useDeleteTestMutation({

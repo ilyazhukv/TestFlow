@@ -83,9 +83,10 @@ export const updateTest = async (req, res) => {
       test.image = `/uploads/${req.file.filename}`;
     }
 
-    const { title, description, category, isPublic } = req.body;
+    const { title, description, timeLimit, category, isPublic } = req.body;
     test.title = title || test.title;
     test.description = description || test.description;
+    test.timeLimit = timeLimit || test.timeLimit;
     test.category = category || test.category;
     test.isPublic = isPublic !== undefined ? isPublic : test.isPublic;
 

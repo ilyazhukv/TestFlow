@@ -8,6 +8,7 @@ export const TestSchema = z.object({
   image: z.string().nullable(),
   title: z.string(),
   description: z.string(),
+  timeLimit: z.number().optional(),
   category: z
     .object({ id: z.string(), title: z.string() })
     .optional()

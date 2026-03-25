@@ -21,7 +21,7 @@ export const testPageRoute: RouteObject = {
       lazy: async () => {
         const [loader, Component] = await Promise.all([
           import("./test-page.loader").then((m) => m.testPageLoader),
-          import("./test-page.ui").then((m) => m.default),
+          import("./test-page.ui").then((m) => m.TestPage),
         ]);
 
         return { loader, Component };

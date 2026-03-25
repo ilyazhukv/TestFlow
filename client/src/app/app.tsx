@@ -1,6 +1,7 @@
-import { QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import { Provider as ReduxProvider } from "react-redux";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 
 import { BootstrappedRouter } from "./browse-router";
 
@@ -17,7 +18,10 @@ export default function App() {
     <ErrorBoundary fallback={"Something went wrong..."}>
       <ReduxProvider store={store}>
         <QueryClientProvider client={queryClient}>
-          <BootstrappedRouter />
+          <HelmetProvider>
+            <Helmet defaultTitle="TestFlow" titleTemplate="%s"/>
+            <BootstrappedRouter />
+          </HelmetProvider>
         </QueryClientProvider>
       </ReduxProvider>
     </ErrorBoundary>

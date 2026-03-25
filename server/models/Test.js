@@ -6,6 +6,7 @@ const testSchema = new mongoose.Schema({
   title: { type: String, required: true, maxLength: 128 },
   slug: { type: String, unique: true, index: true },
   description: { type: String, maxLength: 256 },
+  timeLimit: { type: Number },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", index: true },
   author: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
@@ -27,7 +28,7 @@ testSchema.pre("validate", async function (next) {
   }
 });
 
-testSchema.pre('findOneAndDelete', async function(next) {
+testSchema.pre('findOneAndDelete', async function (next) {
   const doc = await this.model.findOne(this.getQuery());
   if (doc) {
     await mongoose.model("Question").deleteMany({ testId: doc._id });
