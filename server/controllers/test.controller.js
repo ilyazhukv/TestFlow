@@ -23,18 +23,18 @@ export const getTests = async (req, res) => {
 
     res.json({ tests, testsCount });
   } catch (error) {
-    return res.status(500).json({ errors: { server: ["Internal server error"] } });
+    res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 };
 
 export const getTest = async (req, res) => {
   try {
-    const test = await Test.findOne({ slug: req.params.slug }).populate("author", "name avatar").populate("category", "title").populate("questions").lean();
+    const test = await Test.findOne({ slug: req.params.slug }).populate("author", "name avatar").populate("category", "title").populate({ path: "questions", select: "-options.isCorrect" }).lean();
     if (!test) return res.status(404).json({ errors: { tests: ["Test not found"] } });
 
     res.json(test)
   } catch (error) {
-    return res.status(500).json({ errors: { server: ["Internal server error"] } });
+    res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 }
 
@@ -61,8 +61,7 @@ export const createTest = async (req, res) => {
 
     res.status(200).json(populatedTest);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ errors: { server: ["Internal server error"] } });
+    res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 };
 
@@ -96,7 +95,7 @@ export const updateTest = async (req, res) => {
 
     res.status(200).json(populatedTest);
   } catch (error) {
-    return res.status(500).json({ errors: { server: ["Internal server error"] } });
+    res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 };
 
@@ -113,7 +112,7 @@ export const deleteTest = async (req, res) => {
       try {
         const relativePath = test.image.startsWith('/') ? test.image.substring(1) : test.image;
         const absolutePath = path.join(process.cwd(), relativePath);
-        
+
         await fs.unlink(absolutePath);
         console.log("File deleted:", absolutePath);
       } catch (err) {
@@ -123,10 +122,9 @@ export const deleteTest = async (req, res) => {
 
     await Test.findOneAndDelete({ slug: req.params.slug });
 
-    return res.status(200).json({ message: "The test has been deleted successfully" });
-
+    res.status(200).json({ message: "The test has been deleted successfully" });
   } catch (error) {
     console.error("Critical Delete Error:", error);
-    return res.status(500).json({ errors: { server: ["Internal server error"] } });
+    res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 };

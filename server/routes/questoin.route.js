@@ -3,9 +3,9 @@ import { createQuestion, deleteQuestion } from "../controllers/question.controll
 import authMiddleware from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/upload.middleware.js";
 
-const route = e.Router();
+const router = e.Router();
 
-route.post("/:slug", authMiddleware, upload.single("image"), createQuestion);
-route.delete("/:slug", authMiddleware, deleteQuestion);
+router.post("/:slug", authMiddleware, upload.single("image"), createQuestion);
+router.delete("/:slug", authMiddleware, deleteQuestion);
 
-export default route;
+export default router;

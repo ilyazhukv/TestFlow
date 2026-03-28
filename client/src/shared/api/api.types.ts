@@ -15,6 +15,8 @@ import {
   ApiErrorDataDtoSchema,
   ApiErrorDataSchema,
   OptionDtoSchema,
+  SaveResultDtoSchema,
+  ResultDtoSchema,
 } from "./api.contracts";
 
 export type UserDto = z.infer<typeof UserDtoSchema>;
@@ -27,6 +29,10 @@ export type UpdateTestDto = z.infer<typeof UpdateTestDtoSchema>;
 export type TestDto = z.infer<typeof TestDtoSchema>;
 export type TestsDto = z.infer<typeof TestsDtoSchema>;
 export type FilterQueryDto = z.infer<typeof FilterQueryDtoSchema>;
+
+export type SaveResultDto = z.infer<typeof SaveResultDtoSchema>;
+
+export type ResultDto = z.infer<typeof ResultDtoSchema>;
 
 export type QuestionDto = z.infer<typeof QuestionDtoSchema>;
 export type OptionDto = z.infer<typeof OptionDtoSchema>;

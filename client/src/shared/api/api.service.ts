@@ -11,10 +11,12 @@ import {
   CategoriesDtoSchema,
   QuestionDtoSchema,
   CreateQuestionDtoSchema,
+  SaveResultDtoSchema,
+  ResultDtoSchema,
 } from "./api.contracts";
 import { api } from "./api.instance";
 import { responseContract } from "./api.lib";
-import { LoginUserDto, RegisterUserDto, CreateTestDto, UpdateTestDto } from "./api.types";
+import { LoginUserDto, RegisterUserDto, CreateTestDto, UpdateTestDto, SaveResultDto } from "./api.types";
 
 export function getUser(config?: AxiosRequestConfig) {
   return api.get('/user', config).then(responseContract(UserDtoSchema));
@@ -67,6 +69,11 @@ export function createQuestion(slug: string, createQuestionDto: FormData | Creat
 
 export function deleteQuestion(slug: string, qid: string, config?: AxiosRequestConfig) {
   return api.delete(`/question/${slug}`, {...config, data: {questionId: qid}});
+}
+
+export function saveResult(slug: string, saveResultDto: SaveResultDto, config?: AxiosRequestConfig) {
+  const data = SaveResultDtoSchema.parse(saveResultDto); 
+  return api.post(`/result/${slug}/save`, data, config).then(responseContract(ResultDtoSchema)); 
 }
 
 export function getCategories(config?: AxiosRequestConfig) {

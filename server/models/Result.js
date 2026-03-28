@@ -6,7 +6,6 @@ const resultSchema = new mongoose.Schema({
   score: { type: Number, default: 0 },
   maxScore: { type: Number, default: 0 },
   percent: { type: Number, default: 0 },
-  answers: [{ userAnswer: { type: String }, correctAnswer: { type: String } }],
   completedAt: { type: Date, default: Date.now }
 });
 

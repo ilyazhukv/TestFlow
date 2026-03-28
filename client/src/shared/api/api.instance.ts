@@ -68,7 +68,13 @@ api.interceptors.response.use(
       };
 
       return Promise.reject(
-        new AxiosError(error.message, error.code, error.config, error.request, normalizedErrorResponse),
+        new AxiosError(
+          error.message,
+          error.code,
+          error.config,
+          error.request,
+          normalizedErrorResponse,
+        ),
       );
     }
 

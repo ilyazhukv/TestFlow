@@ -1,8 +1,10 @@
 import { z } from "zod";
 
+const objectId = z.string().regex(/^[0-9a-fA-F]{24}$/);
+
 export const UserDtoSchema = z.object({
   user: z.object({
-    id: z.string(),
+    id: objectId,
     avatar: z.string().nullable(),
     name: z.string(),
     email: z.string().email(),
@@ -45,13 +47,13 @@ export const UpdateTestDtoSchema = z.object({
 });
 
 export const OptionDtoSchema = z.object({
-  _id: z.string().optional(),
+  _id: objectId.optional(),
   text: z.string(),
   isCorrect: z.boolean().default(false),
 });
 
 export const QuestionDtoSchema = z.object({
-  _id: z.string(),
+  _id: objectId,
   testId: z.string(),
   text: z.string(),
   image: z.string().optional().nullable(),
@@ -69,14 +71,14 @@ export const CreateQuestionDtoSchema = z.object({
 });
 
 export const CategoryDtoSchema = z.object({
-  _id: z.string(),
+  _id: objectId,
   title: z.string(),
 });
 
 export const CategoriesDtoSchema = z.array(CategoryDtoSchema);
 
 export const TestDtoSchema = z.object({
-  _id: z.string(),
+  _id: objectId,
   slug: z.string(),
   image: z.string().nullable(),
   title: z.string(),
@@ -84,7 +86,7 @@ export const TestDtoSchema = z.object({
   timeLimit: z.number(),
   category: CategoryDtoSchema.nullable(),
   author: z.object({
-    _id: z.string(),
+    _id: objectId,
     name: z.string(),
     avatar: z.string().nullable().optional(),
   }),
@@ -103,6 +105,25 @@ export const FilterQueryDtoSchema = z.object({
   limit: z.number().min(1),
   tag: z.string().optional(),
   author: z.string().optional(),
+});
+
+export const ResultDtoSchema = z.object({
+  _id: objectId,
+  userId: objectId.nullable(),
+  testId: objectId,
+  score: z.number(),
+  maxScore: z.number(),
+  percent: z.number(),
+  completedAt: z.string(), 
+});
+
+export const UserAnswerDtoSchema = z.object({
+  questionId: objectId,
+  selectedOptIds: z.array(objectId),
+});
+
+export const SaveResultDtoSchema = z.object({
+  answers: z.array(UserAnswerDtoSchema),
 });
 
 export const ApiErrorDataDtoSchema = z.object({
