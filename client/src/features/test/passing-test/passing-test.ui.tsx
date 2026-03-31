@@ -19,6 +19,7 @@ import { useSaveResultMutation } from "./passing-test.mutation";
 import { SaveResult } from "./passing-test.types";
 
 import { testQueryOptions } from "@/entities/test/test.api";
+import { Timer } from "@/shared/ui/timer/timer";
 import { ENV } from "@/shared/config/env";
 
 interface BaseTestPassingProps {
@@ -37,6 +38,7 @@ export function BaseTestPassing({ slug }: BaseTestPassingProps) {
   const { data: test } = useSuspenseQuery(testQueryOptions(slug));
   const [step, setStep] = useState(0);
   const [userAnswers, setUserAnswers] = useState<SaveResult>([]);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
   const {
     mutate: saveResults,
@@ -58,6 +60,28 @@ export function BaseTestPassing({ slug }: BaseTestPassingProps) {
 
     setStep((prev) => prev + 1);
   };
+
+  useEffect(() => {
+    if (test?.timeLimit && timeLeft === null && step === 1) {
+      setTimeLeft(test.timeLimit * 60);
+    }
+  }, [test?.timeLimit, step, timeLeft]);
+
+  useEffect(() => {
+    if (timeLeft === null || step === 0 || step > test.questions.length) return;
+
+    if (timeLeft <= 0) {
+      handleNext([]);
+
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => (prev !== null && prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft, step, test.questions.length]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -152,6 +176,7 @@ export function BaseTestPassing({ slug }: BaseTestPassingProps) {
         <PassingStep
           currentStep={step}
           question={test.questions[step - 1]}
+          timer={timeLeft !== null && <Timer seconds={timeLeft} />}
           totalSteps={test.questions.length}
           onNext={handleNext}
         />

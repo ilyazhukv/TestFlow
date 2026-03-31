@@ -17,11 +17,28 @@ import { Play } from "@gravity-ui/icons";
 
 import { ENV } from "@/shared/config/env";
 
+interface Options {
+  _id?: string;
+  text: string;
+  isCorrect: boolean;
+}
+
+interface Question {
+  _id: string;
+  testId: string;
+  text: string;
+  image?: string | null;
+  type: string;
+  options: Array<Options>;
+  score?: number;
+}
+
 interface PassingStepProps {
-  question: any;
+  question: Question;
   currentStep: number;
   totalSteps: number;
   onNext: (selectedIds: string[]) => void;
+  timer?: React.ReactNode;
 }
 
 export function PassingStep({
@@ -29,6 +46,7 @@ export function PassingStep({
   question,
   totalSteps,
   onNext,
+  timer,
 }: PassingStepProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
@@ -59,6 +77,7 @@ export function PassingStep({
             <Chip color="primary" radius="sm" size="sm" variant="flat">
               Question {currentStep} of {totalSteps}
             </Chip>
+            {timer}
             <Chip
               color={
                 question.type === "several_answers" ? "secondary" : "default"

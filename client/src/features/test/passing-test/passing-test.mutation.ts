@@ -3,14 +3,16 @@ import {
   useMutation,
   UseMutationOptions,
 } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 import { SaveResult } from "./passing-test.types";
 import { transformResultToDto } from "./passing-test.lib";
 
-import { saveResult } from "@/shared/api/api.service";
+import { calcResult, saveResult } from "@/shared/api/api.service";
 import { queryClient } from "@/shared/queryClient";
 import { transformResultDtoToResult } from "@/entities/result/result.lib";
 import { Result } from "@/entities/result/result.types";
+import { selectSession } from "@/entities/session/session.model";
 
 export function useSaveResultMutation(
   slug: string,
@@ -20,6 +22,7 @@ export function useSaveResultMutation(
   > = {},
 ) {
   const { mutationKey = [], onMutate, onSuccess, onError, onSettled } = options;
+  const isAuth = useSelector(selectSession);
 
   return useMutation<Result, DefaultError, SaveResult>({
     mutationKey: ["result", "save", slug, ...mutationKey],
@@ -27,7 +30,9 @@ export function useSaveResultMutation(
     mutationFn: async (answers: SaveResult) => {
       const saveResultDto = transformResultToDto(answers);
 
-      const { data } = await saveResult(slug, saveResultDto);
+      const apiCall = isAuth ? saveResult : calcResult;
+
+      const { data } = await apiCall(slug, saveResultDto);
 
       return transformResultDtoToResult(data);
     },
@@ -35,10 +40,17 @@ export function useSaveResultMutation(
     onMutate,
 
     onSuccess: async (...args) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["results"] }),
-        onSuccess?.(...args),
-      ]);
+      const promises: Promise<unknown>[] = [];
+
+      if (isAuth) {
+        promises.push(queryClient.invalidateQueries({ queryKey: ["results"] }));
+      }
+
+      if (onSuccess) {
+        promises.push(Promise.resolve(onSuccess(...args)));
+      }
+
+      await Promise.all(promises);
     },
 
     onError,

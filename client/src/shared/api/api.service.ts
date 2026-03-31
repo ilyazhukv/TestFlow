@@ -76,6 +76,11 @@ export function saveResult(slug: string, saveResultDto: SaveResultDto, config?: 
   return api.post(`/result/${slug}/save`, data, config).then(responseContract(ResultDtoSchema)); 
 }
 
+export function calcResult(slug: string, saveResultDto: SaveResultDto, config?: AxiosRequestConfig) {
+  const data = SaveResultDtoSchema.parse(saveResultDto); 
+  return api.post(`/result/${slug}/calc`, data, config).then(responseContract(ResultDtoSchema)); 
+}
+
 export function getCategories(config?: AxiosRequestConfig) {
   return api.get("/category", config).then(responseContract(CategoriesDtoSchema));
 }
