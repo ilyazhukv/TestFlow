@@ -11,7 +11,7 @@ import { queryClient } from "@/shared/queryClient";
 import { store } from "@/shared/store";
 
 attachAuthInterceptor();
-setRefreshHandler(refreshSession)
+setRefreshHandler(refreshSession);
 
 export default function App() {
   return (
@@ -19,7 +19,7 @@ export default function App() {
       <ReduxProvider store={store}>
         <QueryClientProvider client={queryClient}>
           <HelmetProvider>
-            <Helmet defaultTitle="TestFlow" titleTemplate="%s"/>
+            <Helmet defaultTitle="TestFlow" titleTemplate="%s" />
             <BootstrappedRouter />
           </HelmetProvider>
         </QueryClientProvider>

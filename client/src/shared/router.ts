@@ -14,4 +14,9 @@ export const pathKeys = {
     root: "/editor/",
     bySlug: (slug: string) => `/editor/${slug}/`,
   },
+
+  profile: {
+    root: "/profile/",
+    byName: (name: string) => `/profile/${name}`,
+  },
 };

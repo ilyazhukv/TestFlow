@@ -24,7 +24,7 @@ export function transformTestDtoToTest(testDto: TestDto): Test {
           title: test.category.title,
         }
       : null,
-    questions: Array.isArray(test.questions) 
+    questions: Array.isArray(test.questions)
       ? test.questions.filter(
           (q): q is Exclude<typeof q, string> => typeof q !== "string",
         )

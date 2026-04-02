@@ -10,4 +10,13 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+userSchema.pre('findOneAndDelete', async function (next) {
+  const doc = await this.model.findOne(this.getQuery());
+  if (doc) {
+    await mongoose.model("Test").deleteMany({ author: doc._id });
+    await mongoose.model("Result").deleteMany({ userId: doc._id });
+  }
+  next();
+});
+
 export default mongoose.model("User", userSchema);

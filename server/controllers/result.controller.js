@@ -52,6 +52,7 @@ const calculateScore = (questions, answers) => {
     score: Math.round(totalScore * 10) / 10,
     maxScore: maxPossibleScore,
     percent: maxPossibleScore > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0,
+    completedAt: Date.now()
   };
 };
 
@@ -62,15 +63,27 @@ export const saveResult = async (req, res) => {
     if (!test) return res.status(404).json({ errors: { tests: ["Not found"] } });
 
     const stats = calculateScore(test.questions, answers);
-    const result = await Result.create({
-      userId: req.user.id,
-      testId: test._id,
-      ...stats,
-    });
 
-    res.status(201).json(result);
+    const existingResult = await Result.findOne({ userId: req.user.id, testId: test._id });
+
+    if (!existingResult) {
+      const result = await Result.create({
+        userId: req.user.id,
+        testId: test._id,
+        ...stats,
+      });
+      return res.status(201).json(result);
+    }
+
+    if (stats.percent > existingResult.percent) {
+      Object.assign(existingResult, stats);
+      await existingResult.save();
+      return res.status(200).json(existingResult);
+    }
+
+    return res.status(200).json(existingResult);
   } catch (error) {
-    res.status(500).json({ errors: { server: ["Internal error"] } });
+    res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 };
 
@@ -90,6 +103,6 @@ export const calcResult = async (req, res) => {
       completedAt: new Date().toISOString(),
     });
   } catch (error) {
-    res.status(500).json({ errors: { server: ["Internal error"] } });
+    res.status(500).json({ errors: { server: ["Internal server error"] } });
   }
 };

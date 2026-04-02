@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const objectId = z.string().regex(/^[0-9a-fA-F]{24}$/);
+export const objectId = z.string().regex(/^[0-9a-fA-F]{24}$/);
 
 export const UserDtoSchema = z.object({
   user: z.object({
@@ -83,7 +83,7 @@ export const TestDtoSchema = z.object({
   image: z.string().nullable(),
   title: z.string(),
   description: z.string(),
-  timeLimit: z.number(),
+  timeLimit: z.number().optional(),
   category: CategoryDtoSchema.nullable(),
   author: z.object({
     _id: objectId,
@@ -109,12 +109,29 @@ export const FilterQueryDtoSchema = z.object({
 
 export const ResultDtoSchema = z.object({
   _id: objectId,
-  userId: objectId.nullable(),
-  testId: objectId,
+  userId: objectId,
+  testId: z.union([
+    z.object({
+      title: z.string(),
+      slug: z.string(),
+      image: z.string().nullable(),
+    }),
+  ]),
   score: z.number(),
   maxScore: z.number(),
   percent: z.number(),
-  completedAt: z.string(), 
+  completedAt: z.string(),
+});
+
+export const ProfileDtoSchema = z.object({
+  id: objectId,
+  avatar: z.string().nullable(),
+  name: z.string(),
+  email: z.string().email(),
+  role: z.string(),
+  status: z.string(),
+  createdAt: z.string(),
+  results: z.array(ResultDtoSchema),
 });
 
 export const UserAnswerDtoSchema = z.object({

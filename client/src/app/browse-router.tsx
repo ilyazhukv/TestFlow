@@ -12,6 +12,7 @@ import { DefaultLayout } from "./layouts/default";
 import { homePageRoute } from "@/pages/home/home-page.route";
 import { loginPageRoute } from "@/pages/login/login-page.route";
 import { registerPageRoute } from "@/pages/register/register-page.route";
+import { profilePageRoute } from "@/pages/profile/profile-page.route";
 import { testPageRoute } from "@/pages/test/test-page.route";
 import { editorPageRoute } from "@/pages/editor/editor-page.route";
 import { page404Route } from "@/pages/page-404/page-404.route";
@@ -69,7 +70,7 @@ const browserRouter = () =>
         testPageRoute,
         {
           element: <PortectedRoute />,
-          children: [editorPageRoute],
+          children: [editorPageRoute, profilePageRoute],
         },
         {
           element: <GuestRoute />,

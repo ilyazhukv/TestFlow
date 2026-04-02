@@ -13,6 +13,7 @@ import {
   CreateQuestionDtoSchema,
   SaveResultDtoSchema,
   ResultDtoSchema,
+  ProfileDtoSchema,
 } from "./api.contracts";
 import { api } from "./api.instance";
 import { responseContract } from "./api.lib";
@@ -38,6 +39,10 @@ export function logoutUser(config?: AxiosRequestConfig) {
 
 export function refreshToken(config?: AxiosRequestConfig) {
   return api.get("/auth/refresh", config).then(responseContract(UserDtoSchema));
+}
+
+export function getProfileByName(name: string, config?: AxiosRequestConfig) {
+  return api.get(`/user/${name}`, config).then(responseContract(ProfileDtoSchema));
 }
 
 export function getTestBySlug(slug: string, config?: AxiosRequestConfig) {

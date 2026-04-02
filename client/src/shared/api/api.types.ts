@@ -4,6 +4,7 @@ import {
   UserDtoSchema,
   LoginUserDtoSchema,
   RegisterUserDtoSchema,
+  ProfileDtoSchema,
   CreateTestDtoSchema,
   UpdateTestDtoSchema,
   TestDtoSchema,
@@ -22,6 +23,8 @@ import {
 export type UserDto = z.infer<typeof UserDtoSchema>;
 export type LoginUserDto = z.infer<typeof LoginUserDtoSchema>;
 export type RegisterUserDto = z.infer<typeof RegisterUserDtoSchema>;
+
+export type ProfileDto = z.infer<typeof ProfileDtoSchema>;
 
 export type CreateTestDto = z.infer<typeof CreateTestDtoSchema>;
 export type UpdateTestDto = z.infer<typeof UpdateTestDtoSchema>;
