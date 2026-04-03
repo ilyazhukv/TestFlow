@@ -1,11 +1,4 @@
 services:
-  data:
-    image: mongo:8.0.19-noble
-    container_name: data
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./data:/data/db
 
   server:
     build: ./server
@@ -16,8 +9,6 @@ services:
       - ./server/uploads:/app/uploads
     env_file:
       - ./server/.env
-    depends_on:
-      - data
 
   client:
     build:
