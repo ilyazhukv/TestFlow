@@ -38,7 +38,7 @@ export const CreateTestDtoSchema = z.object({
 });
 
 export const UpdateTestDtoSchema = z.object({
-  slug: z.string(),
+  slug: z.string().optional(),
   image: z.any().nullable(),
   title: z.string(),
   description: z.string(),
@@ -110,13 +110,11 @@ export const FilterQueryDtoSchema = z.object({
 export const ResultDtoSchema = z.object({
   _id: objectId,
   userId: objectId,
-  testId: z.union([
-    z.object({
-      title: z.string(),
-      slug: z.string(),
-      image: z.string().nullable(),
-    }),
-  ]),
+  testId: z.object({
+    title: z.string(),
+    slug: z.string(),
+    image: z.string().nullable(),
+  }),
   score: z.number(),
   maxScore: z.number(),
   percent: z.number(),
@@ -132,6 +130,7 @@ export const ProfileDtoSchema = z.object({
   status: z.string(),
   createdAt: z.string(),
   results: z.array(ResultDtoSchema),
+  tests: z.array(TestDtoSchema),
 });
 
 export const UserAnswerDtoSchema = z.object({

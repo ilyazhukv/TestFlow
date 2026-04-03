@@ -14,11 +14,6 @@ services:
       - "5000:5000"
     volumes:
       - ./server/uploads:/app/uploads
-    # === DEV ONLY: DELETE FOR PROD ===
-      - ./server:/app
-      - /app/node_modules
-    command: npx nodemon -L app.js 
-    # =================================
     env_file:
       - ./server/.env
     depends_on:

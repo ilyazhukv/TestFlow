@@ -18,7 +18,7 @@ import { transformTestToUpdateTest } from "./update-test.lib";
 import { useUpdateTestMutation } from "./update-test.mutation";
 
 import { categoriesQueryOptions } from "@/entities/category/category.api";
-import { testQueryOptions } from "@/entities/test/test.api";
+import { myTestQueryOptions } from "@/entities/test/test.api";
 import { QuestionCard } from "@/entities/question/question-card.ui";
 
 interface UpdateTestFormProps {
@@ -35,7 +35,7 @@ export function UpdateTestForm(props: UpdateTestFormProps) {
 
 function BaseUpdateTestForm({ slug }: UpdateTestFormProps) {
   const { data: categories } = useSuspenseQuery(categoriesQueryOptions());
-  const { data: test } = useSuspenseQuery(testQueryOptions(slug));
+  const { data: test } = useSuspenseQuery(myTestQueryOptions(slug));
 
   const { mutate, isPending, isError, error } = useUpdateTestMutation({
     mutationKey: [slug],
@@ -160,7 +160,9 @@ function BaseUpdateTestForm({ slug }: UpdateTestFormProps) {
                 labelPlacement="outside"
                 placeholder="0"
                 type="number"
-                {...register("timeLimit", { valueAsNumber: true })}
+                {...register("timeLimit", {
+                  setValueAs: (v) => (v === "" || isNaN(v) ? 0 : Number(v)),
+                })}
                 errorMessage={errors.timeLimit?.message}
                 isDisabled={isPending}
                 isInvalid={!!errors.timeLimit}

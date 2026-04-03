@@ -14,17 +14,40 @@ import { link as linkStyles } from "@heroui/theme";
 import clsx from "clsx";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { siteConfig } from "@/app/config/site.config";
 import { ThemeSwitch } from "@/features/theme-switch/theme-switch";
 import { SearchIcon } from "@/shared/ui/icons/icons";
 import { Logo } from "@/shared/ui/icons/icons";
-import { store } from "@/shared/store";
 import LogoutButton from "@/features/session/logout/logout.ui";
+import { sessionQueryOptions } from "@/entities/session/session.api";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { pathname } = useLocation();
+  const { data: session } = useQuery(sessionQueryOptions);
+
+  const filteredNavItems = siteConfig.navItems.filter((item) => {
+    if (item.label === "Profile") return !!session;
+
+    return true;
+  });
+
+  const filteredNavMenuItems = siteConfig.navMenuItems.filter((item) => {
+    if (item.label === "Profile") return !!session;
+
+    return true;
+  });
+
+  const getHref = (item: { label: string; href: string }) => {
+    if (item.label === "Profile" && session?.name) {
+      return `/profile/${session.name}`;
+    }
+
+    return item.href;
+  };
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -42,7 +65,7 @@ export const Navbar = () => {
   );
   const authButton = (
     <>
-      {store.getState().session ? (
+      {session ? (
         <LogoutButton onClick={() => setIsMenuOpen(false)} />
       ) : (
         <Button
@@ -78,7 +101,7 @@ export const Navbar = () => {
           </Link>
         </NavbarBrand>
         <div className="hidden md:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
+          {filteredNavItems.map((item) => (
             <NavbarItem key={item.href} isActive={pathname === item.href}>
               <Link
                 as={NavLink}
@@ -87,7 +110,7 @@ export const Navbar = () => {
                   "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 color="foreground"
-                to={item.href}
+                to={getHref(item)}
               >
                 {item.label}
               </Link>
@@ -115,13 +138,13 @@ export const Navbar = () => {
       <NavbarMenu>
         {searchInput}
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
+          {filteredNavMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
                 as={NavLink}
                 color="foreground"
                 size="lg"
-                to={`${item.href}`}
+                to={getHref(item)}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}

@@ -15,7 +15,6 @@ import resultRouter from "./routes/result.routes.js";
 import testRouter from "./routes/test.routes.js";
 import userRouter from "./routes/user.routes.js";
 
-dotenv.config();
 dbConnect();
 
 const swaggerFile = fs.readFileSync("./swagger.yaml", "utf-8");

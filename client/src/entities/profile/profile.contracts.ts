@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { objectId, ResultDtoSchema } from "@/shared/api/api.contracts";
+import {
+  objectId,
+  ResultDtoSchema,
+  TestDtoSchema,
+} from "@/shared/api/api.contracts";
 
 export const ProfileSchema = z.object({
   _id: objectId,
@@ -11,4 +15,5 @@ export const ProfileSchema = z.object({
   status: z.string(),
   createdAt: z.string(),
   results: z.array(ResultDtoSchema),
+  tests: z.array(TestDtoSchema),
 });

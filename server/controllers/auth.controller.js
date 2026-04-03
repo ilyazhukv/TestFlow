@@ -93,15 +93,15 @@ export const logout = async (req, res) => {
 export const refresh = async (req, res) => {
   try {
     const { refreshToken } = req.cookies;
-    if (!refreshToken) return res.status(404).json({ message: { token: ["Refresh token not found"] } });
+    if (!refreshToken) return res.status(401).json({ message: { token: ["Refresh token not found"] } });
 
     const tokenData = await Token.findOne({ refreshToken });
-    if (!tokenData) return res.status(404).json({ message: { token: ["Token not in database"] } });
+    if (!tokenData) return res.status(401).json({ message: { token: ["Token not in database"] } });
 
     const userData = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
     const user = await User.findById(userData.id);
-    if (!user) return res.status(404).json({ message: { login: ["User not found"] } });
+    if (!user) return res.status(401).json({ message: { login: ["User not found"] } });
 
     const { access, refresh } = generateToken(user);
 

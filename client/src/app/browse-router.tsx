@@ -30,7 +30,7 @@ async function rootLoader() {
         ...sessionQueryOptions,
         meta: { skipAuthRefresh: true },
       });
-    } catch (e: any) {}
+    } catch {}
   }
 
   return null;

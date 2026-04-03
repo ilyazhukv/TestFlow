@@ -6,6 +6,7 @@ export function transformProfileDtoToProfile(profileDto: ProfileDto): Profile {
     ...profileDto,
     _id: profileDto.id,
     results: profileDto.results || [],
+    tests: profileDto.tests || [],
     avatar: profileDto.avatar || null,
   };
 }

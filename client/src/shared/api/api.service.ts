@@ -53,6 +53,10 @@ export function getAllTests(config?: AxiosRequestConfig) {
   return api.get("/test", config).then(responseContract(TestsDtoSchema));
 }
 
+export function getMyTest(slug: string, config?: AxiosRequestConfig) {
+  return api.get(`/test/my/${slug}`, config).then(responseContract(TestDtoSchema));
+}
+
 export function createTest(createTestDto: FormData | CreateTestDto, config?: AxiosRequestConfig) {
   const data = createTestDto instanceof FormData ? createTestDto : CreateTestDtoSchema.parse(createTestDto);
   return api.post("/test/create", data, config).then(responseContract(TestDtoSchema));

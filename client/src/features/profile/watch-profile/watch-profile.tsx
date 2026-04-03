@@ -68,7 +68,7 @@ function BaseProfile() {
           <div className="grid gap-3">
             {profile.results.map((result) => (
               <Link key={result._id} to={`/test/${result.testId.slug}`}>
-                <Card key={result._id} isHoverable shadow="sm">
+                <Card isHoverable shadow="sm">
                   <CardBody className="flex flex-row items-center justify-between p-4">
                     <div className="space-y-1">
                       <p className="font-semibold text-lg">
@@ -81,17 +81,18 @@ function BaseProfile() {
                       </p>
                     </div>
 
-                    <div className="text-right w-[10%]">
+                    <div className="text-right">
                       <span>{result.percent}%</span>
-                      <Progress
-                        className={`text-2xl font-black ${getScoreColor(result.percent)}`}
-                        value={result.percent}
-                      />
                       <p className="text-tiny text-default-500">
                         {result.score} / {result.maxScore} points
                       </p>
                     </div>
                   </CardBody>
+                  <Progress
+                    className={`text-2xl font-black ${getScoreColor(result.percent)}`}
+                    size="sm"
+                    value={result.percent}
+                  />
                 </Card>
               </Link>
             ))}
@@ -105,34 +106,20 @@ function BaseProfile() {
         )}
       </section>
 
-      {/* <section className="space-y-4">
+      <section className="space-y-4">
         <h2 className="text-2xl font-bold px-2">History of creating tests</h2>
 
-        {profile.results.length > 0 ? (
+        {profile.tests.length > 0 ? (
           <div className="grid gap-3">
-            {profile.results.map((result) => (
-              <Link key={result._id} to={`${result.testId.slug}`}>
-                <Card key={result._id} isHoverable shadow="sm">
+            {profile.tests.map((test) => (
+              <Link key={test._id} to={`/editor/${test.slug}`}>
+                <Card isHoverable shadow="sm">
                   <CardBody className="flex flex-row items-center justify-between p-4">
                     <div className="space-y-1">
-                      <p className="font-semibold text-lg">
-                        {typeof result.testId === "object"
-                          ? result.testId.title
-                          : "Completed test"}
-                      </p>
+                      <p className="font-semibold text-lg">{test.title}</p>
+                      <></>
                       <p className="text-tiny text-default-400">
-                        {new Date(result.completedAt).toLocaleString()}
-                      </p>
-                    </div>
-
-                    <div className="text-right w-[10%]">
-                      <span>{result.percent}%</span>
-                      <Progress
-                        className={`text-2xl font-black ${getScoreColor(result.percent)}`}
-                        value={result.percent}
-                      />
-                      <p className="text-tiny text-default-500">
-                        {result.score} / {result.maxScore} points
+                        {new Date(test.createdAt).toLocaleString()}
                       </p>
                     </div>
                   </CardBody>
@@ -147,7 +134,7 @@ function BaseProfile() {
             </p>
           </Card>
         )}
-      </section> */}
+      </section>
     </div>
   );
 }

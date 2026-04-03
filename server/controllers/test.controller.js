@@ -29,7 +29,18 @@ export const getTests = async (req, res) => {
 
 export const getTest = async (req, res) => {
   try {
-    const test = await Test.findOne({ slug: req.params.slug }).populate("author", "name avatar").populate("category", "title").populate({ path: "questions", select: "-options.isCorrect" }).lean();
+    const test = await Test.findOne({ slug: req.params.slug, isPublic: true }).populate("author", "name avatar").populate("category", "title").populate({ path: "questions", select: "-options.isCorrect" }).lean();
+    if (!test) return res.status(404).json({ errors: { tests: ["Test not found"] } });
+
+    res.json(test)
+  } catch (error) {
+    res.status(500).json({ errors: { server: ["Internal server error"] } });
+  }
+}
+
+export const getMyTest = async (req, res) => {
+  try {
+    const test = await Test.findOne({ slug: req.params.slug, author: req.user.id }).populate("author", "name avatar").populate("category", "title").populate("questions").lean();
     if (!test) return res.status(404).json({ errors: { tests: ["Test not found"] } });
 
     res.json(test)

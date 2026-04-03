@@ -22,10 +22,10 @@ export function transformUpdateTestToFormData(
 
 export function transformTestToUpdateTest(test: Test): UpdateTest {
   return {
-    slug: test.slug,
     title: test.title,
+    slug: test.slug,
     description: test.description,
-    timeLimit: test.timeLimit,
+    timeLimit: Number(test.timeLimit),
     category: test.category?.id || "",
     isPublic: test.isPublic,
   };
