@@ -22,7 +22,7 @@ const swaggerDocument = yaml.parse(swaggerFile);
 
 const app = e();
 
-app.use(cors({ credentials: true, origin: [process.env.CLIENT_URL, process.env.DEV_CLIENT_URL] }));
+app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
 app.use(e.json({ limit: "10mb" }));
 app.use(cookieParser());
 
@@ -36,8 +36,8 @@ app.use("/user", userRouter);
 app.use("/uploads", e.static("uploads"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server started on http://localhost:${PORT}/`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server started on port ${PORT}`);
 });

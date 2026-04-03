@@ -8,6 +8,6 @@ export const generateToken = (user) => {
 };
 
 export const setRefreshCookie = (res, access, refresh) => {
-  res.cookie("accessToken", access, {httpOnly: true, sameSite: "strict", maxAge: 15 * 60 * 1000})
-  res.cookie("refreshToken", refresh, { httpOnly: true, sameSite: "strict", maxAge: 7 * 24 * 60 * 60 * 1000 });
+  res.cookie("accessToken", access, {httpOnly: true, secure: true, sameSite: "none", maxAge: 15 * 60 * 1000})
+  res.cookie("refreshToken", refresh, { httpOnly: true, secure: true, sameSite: "none", maxAge: 7 * 24 * 60 * 60 * 1000 });
 };
