@@ -16,18 +16,20 @@ dbConnect();
 
 const app = e();
 
+app.set("trust proxy", 1);
+
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
 app.use(e.json({ limit: "10mb" }));
 app.use(cookieParser());
 
-app.use("/api/auth", authRouter);
-app.use("/api/category", categoryRouter);
-app.use("/api/question", questionRouter);
-app.use("/api/result", resultRouter);
-app.use("/api/test", testRouter);
-app.use("/api/user", userRouter);
+app.use("/auth", authRouter);
+app.use("/category", categoryRouter);
+app.use("/question", questionRouter);
+app.use("/result", resultRouter);
+app.use("/test", testRouter);
+app.use("/user", userRouter);
 
-app.use("/api/uploads", e.static("uploads"));
+app.use("/uploads", e.static("uploads"));
 
 const PORT = process.env.PORT || 5000;
 

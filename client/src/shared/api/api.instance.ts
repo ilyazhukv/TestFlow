@@ -22,6 +22,8 @@ export function setRefreshHandler(handler: RefreshHandler) {
 export function attachAuthInterceptor() {
   api.interceptors.request.use(
     (config) => {
+      config.withCredentials = true;
+
       return config;
     },
     (error) => Promise.reject(error),
