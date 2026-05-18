@@ -6,6 +6,13 @@ export const profilePageRoute: RouteObject = {
   path: pathKeys.profile.root,
   children: [
     {
+      path: "edit",
+      lazy: async () => {
+        const Component = (await import("./edit-profile-page.ui")).default;
+        return { Component };
+      },
+    },
+    {
       path: ":name",
       lazy: async () => {
         const [loader, Component] = await Promise.all([

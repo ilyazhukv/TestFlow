@@ -49,15 +49,26 @@ function BaseProfile() {
         </div>
 
         {isOwner && (
-          <Button
-            as={Link}
-            color="primary"
-            radius="full"
-            to={pathKeys.profile.root}
-            variant="ghost"
-          >
-            Edit profile
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              as={Link}
+              color="primary"
+              radius="full"
+              to={pathKeys.profile.edit}
+              variant="ghost"
+            >
+              Edit profile
+            </Button>
+            <Button
+              as={Link}
+              color="warning"
+              radius="full"
+              to={pathKeys.settings}
+              variant="light"
+            >
+              Settings
+            </Button>
+          </div>
         )}
       </section>
 

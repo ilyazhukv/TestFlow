@@ -11,12 +11,19 @@ export const pathKeys = {
   },
 
   editor: {
-    root: "/editor/",
-    bySlug: (slug: string) => `/editor/${slug}/`,
+    root: "/editor",
+    bySlug: (slug: string) => `/editor/${slug}`,
   },
 
   profile: {
-    root: "/profile/",
+    root: "/profile",
     byName: (name: string) => `/profile/${name}`,
+    edit: "/profile/edit",
+  },
+
+  settings: "/settings",
+
+  admin: {
+    root: "/admin",
   },
 };

@@ -15,6 +15,8 @@ import { registerPageRoute } from "@/pages/register/register-page.route";
 import { profilePageRoute } from "@/pages/profile/profile-page.route";
 import { testPageRoute } from "@/pages/test/test-page.route";
 import { editorPageRoute } from "@/pages/editor/editor-page.route";
+import { settingsRoute } from "@/pages/settings/settings-page.route";
+import { adminRoute } from "@/pages/admin/admin-page.route";
 import { page404Route } from "@/pages/page-404/page-404.route";
 import { pathKeys } from "@/shared/router";
 import { persistor, store } from "@/shared/store";
@@ -70,7 +72,7 @@ const browserRouter = () =>
         testPageRoute,
         {
           element: <PortectedRoute />,
-          children: [editorPageRoute, profilePageRoute],
+          children: [editorPageRoute, profilePageRoute, settingsRoute, adminRoute],
         },
         {
           element: <GuestRoute />,
