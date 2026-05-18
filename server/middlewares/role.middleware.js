@@ -1,7 +1,6 @@
-const checkRole = (roles) => (req, res, next) => {
-  if (!req.user) return res.status(401).json({ errors: { auth: ["Not authenticated"] } });
-  if (!roles.includes(req.user.role)) return res.status(403).json({ errors: { role: ["Access denied"] } });
+export const adminMiddleware = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ errors: { server: ["Access denied. Admin only."] } });
+  }
   next();
 };
-
-export default checkRole;
