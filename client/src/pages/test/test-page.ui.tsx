@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { useLoaderData } from "react-router-dom";
 
 import { EditorLoaderArgs } from "./test-page.loader";
@@ -8,9 +7,17 @@ import { TestPassing } from "@/features/test/passing-test/passing-test.ui";
 
 export function ListTestPage() {
   return (
-    <TestPageWrapper>
+    <div className="animate-slide-up">
+      <div className="text-center mb-10 mt-6">
+        <h1 className="text-4xl md:text-5xl font-black text-foreground mb-2">
+          Discover Quizzes
+        </h1>
+        <p className="text-default-500 max-w-md mx-auto">
+          Explore quizzes created by the community
+        </p>
+      </div>
       <ListTest />
-    </TestPageWrapper>
+    </div>
   );
 }
 
@@ -18,23 +25,5 @@ export function TestPage() {
   const { params } = useLoaderData() as EditorLoaderArgs;
   const { slug } = params;
 
-  return (
-    <TestPageWrapper>
-      <TestPassing slug={slug} />
-    </TestPageWrapper>
-  );
-}
-
-function TestPageWrapper(props: { children: ReactNode }) {
-  const { children } = props;
-
-  return (
-    <div className="editor-page">
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-10 offset-md-1 col-xs-12">{children}</div>
-        </div>
-      </div>
-    </div>
-  );
+  return <TestPassing slug={slug} />;
 }
