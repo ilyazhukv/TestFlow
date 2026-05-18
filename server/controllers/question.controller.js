@@ -1,10 +1,11 @@
 import Question from "../models/Question.js";
 import Test from "../models/Test.js";
+import cloudinary from "../config/cloudinary.js";
 
 export const createQuestion = async (req, res) => {
   try {
     let { text, type, options, score } = req.body;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    const image = req.file ? req.file.path : null;
 
     if (typeof options === "string") options = JSON.parse(options);
 
@@ -21,7 +22,7 @@ export const createQuestion = async (req, res) => {
       type,
       options,
       score: Number(score),
-      image: imagePath,
+      image,
     });
     await newQuestion.save();
 
@@ -50,13 +51,10 @@ export const deleteQuestion = async (req, res) => {
 
     if (question.image) {
       try {
-        const relativePath = question.image.startsWith('/') ? question.image.substring(1) : question.image;
-        const absolutePath = path.join(process.cwd(), relativePath);
-
-        await fs.unlink(absolutePath);
-        console.log("File deleted:", absolutePath);
+        const publicId = question.image.split("/").slice(-2).join("/").replace(/\.[^.]+$/, "");
+        await cloudinary.uploader.destroy(publicId);
       } catch (err) {
-        console.error("File system error (skipping):", err.message);
+        console.error("Cloudinary delete error (skipping):", err.message);
       }
     }
 

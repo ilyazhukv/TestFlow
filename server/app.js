@@ -29,8 +29,6 @@ app.use("/result", resultRouter);
 app.use("/test", testRouter);
 app.use("/user", userRouter);
 
-app.use("/uploads", e.static("uploads"));
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, '0.0.0.0', () => {

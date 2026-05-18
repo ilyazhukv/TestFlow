@@ -68,7 +68,7 @@ export function PassingStep({
                 removeWrapper
                 alt="Question image"
                 className="z-0 w-full h-full object-cover"
-                src={`${ENV.API_URL}${question.image}`}
+                src={question.image}
               />
             </div>
           )}

@@ -17,7 +17,7 @@ export function TestCard({ data }: { data: Test }) {
             removeWrapper
             alt={data.title}
             className="z-0 w-full h-full object-cover"
-            src={`${ENV.API_URL}${data.image}`}
+            src={data.image || undefined}
           />
         </div>
       </Link>

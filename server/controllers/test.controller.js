@@ -1,7 +1,6 @@
 import Test from "../models/Test.js";
 import Category from "../models/Category.js";
-import fs from "fs/promises";
-import path from "path";
+import cloudinary from "../config/cloudinary.js";
 
 export const getTests = async (req, res) => {
   try {
@@ -51,11 +50,11 @@ export const getMyTest = async (req, res) => {
 
 export const createTest = async (req, res) => {
   try {
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    const image = req.file ? req.file.path : null;
     const { title, description, category } = req.body;
 
     const newTest = new Test({
-      image: imagePath,
+      image,
       title,
       description,
       category,
@@ -87,10 +86,14 @@ export const updateTest = async (req, res) => {
 
     if (req.file) {
       if (test.image) {
-        const imagePath = path.join(process.cwd(), test.image);
-        await fs.unlink(imagePath)
+        try {
+          const publicId = test.image.split("/").slice(-2).join("/").replace(/\.[^.]+$/, "");
+          await cloudinary.uploader.destroy(publicId);
+        } catch (err) {
+          console.error("Cloudinary delete error (skipping):", err.message);
+        }
       }
-      test.image = `/uploads/${req.file.filename}`;
+      test.image = req.file.path;
     }
 
     const { title, description, timeLimit, category, isPublic } = req.body;
@@ -121,13 +124,10 @@ export const deleteTest = async (req, res) => {
 
     if (test.image) {
       try {
-        const relativePath = test.image.startsWith('/') ? test.image.substring(1) : test.image;
-        const absolutePath = path.join(process.cwd(), relativePath);
-
-        await fs.unlink(absolutePath);
-        console.log("File deleted:", absolutePath);
+        const publicId = test.image.split("/").slice(-2).join("/").replace(/\.[^.]+$/, "");
+        await cloudinary.uploader.destroy(publicId);
       } catch (err) {
-        console.error("File system error (skipping):", err.message);
+        console.error("Cloudinary delete error (skipping):", err.message);
       }
     }
 

@@ -113,7 +113,7 @@ export function BaseTestPassing({ slug }: BaseTestPassingProps) {
                   removeWrapper
                   alt="Test cover"
                   className="z-0 w-full h-full object-cover"
-                  src={`${ENV.API_URL}${test.image}`}
+                  src={test.image || undefined}
                 />
               </div>
               <div className="flex justify-between w-full items-center">

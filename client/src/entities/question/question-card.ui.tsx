@@ -35,7 +35,7 @@ export function QuestionCard({ question, index, slug }: Props) {
             <Image
               alt="Question illustration"
               className="object-cover w-full max-h-[300px]"
-              src={`${ENV.API_URL}${question.image}`}
+              src={question.image}
               width="100%"
             />
           </div>
