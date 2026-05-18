@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 
 import { Test } from "./test.types";
 
-import { ENV } from "@/shared/config/env";
-
 export function TestCard({ data }: { data: Test }) {
   return (
     <Card

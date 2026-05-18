@@ -4,7 +4,6 @@ import { Chip } from "@heroui/chip";
 
 import { Question } from "./question.types";
 
-import { ENV } from "@/shared/config/env";
 import { DeleteQuestButton } from "@/features/question/delete-question/delete-question.ui";
 
 interface Props {

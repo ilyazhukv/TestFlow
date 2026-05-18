@@ -15,8 +15,6 @@ import {
 } from "@heroui/react";
 import { Play } from "@gravity-ui/icons";
 
-import { ENV } from "@/shared/config/env";
-
 interface Options {
   _id?: string;
   text: string;

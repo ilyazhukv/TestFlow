@@ -20,7 +20,6 @@ import { SaveResult } from "./passing-test.types";
 
 import { testQueryOptions } from "@/entities/test/test.api";
 import { Timer } from "@/shared/ui/timer/timer";
-import { ENV } from "@/shared/config/env";
 
 interface BaseTestPassingProps {
   slug: string;
